@@ -689,6 +689,8 @@ body.modal-open { overflow: hidden; }
 
 @media (max-width: 768px) {
   body { flex-direction: column; }
+
+  /* ── Nav tab bar ── */
   #main-nav {
     width: 100%;
     min-height: auto;
@@ -699,15 +701,83 @@ body.modal-open { overflow: hidden; }
     border-bottom: 1px solid var(--border);
     padding: 0;
     overflow-x: auto;
+    z-index: 200;
   }
   .nav-brand { display: none; }
   .nav-list { display: flex; flex-direction: row; padding: 0; width: 100%; }
   .nav-list li { flex: 1; }
-  .nav-link { flex-direction: column; gap: 0.2rem; padding: 0.5rem 0.25rem; justify-content: center; font-size: 0.7rem; text-align: center; border-radius: 0; }
-  .nav-label { font-size: 0.65rem; }
+  .nav-link {
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.6rem 0.25rem;
+    justify-content: center;
+    font-size: 0.7rem;
+    text-align: center;
+    border-radius: 0;
+    min-height: 56px;
+  }
+  .nav-icon { font-size: 1.25rem; }
+  .nav-label { font-size: 0.6rem; letter-spacing: 0; }
+  .nav-badge {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    margin-left: 0;
+    font-size: 0.6rem;
+    padding: 0.05rem 0.3rem;
+    min-width: 16px;
+    text-align: center;
+  }
   .nav-footer { display: none; }
-  #app-root { margin-left: 0; max-width: 100vw; padding: 1rem; }
-  .subject-grid { grid-template-columns: repeat(2, 1fr); }
-  .fc-grades { grid-template-columns: repeat(2, 1fr); }
+
+  /* ── App root ── */
+  #app-root {
+    margin-left: 0;
+    max-width: 100vw;
+    padding: 1rem 0.875rem;
+    overflow-x: hidden;
+  }
+
+  /* ── Home dashboard ── */
+  .home-header h1 { font-size: 1.5rem; }
+  .subject-grid { grid-template-columns: 1fr; }
+  .subject-card-actions { gap: 0.5rem; }
+  .subject-card-actions .btn { flex: 1; justify-content: center; min-height: 40px; }
+
+  /* ── Fiches ── */
+  .fiche-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .fiche-section-content table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .fiche-reader-header { flex-wrap: wrap; }
+  .fiche-toc { font-size: 0.9rem; }
+
+  /* ── Flashcards ── */
+  .fc-grades { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+  .grade-btn { min-height: 64px; padding: 0.6rem; }
+  .fc-card { height: 240px; }
+  .fc-chapter-card { min-height: 56px; }
+  .fc-chapter-stats { flex-wrap: wrap; gap: 0.4rem; }
+
+  /* ── Quiz ── */
+  .quiz-question-box { padding: 1.25rem; }
+  .choice-btn { min-height: 52px; }
+  .quiz-chapter-card { min-height: 56px; }
+  .quiz-results-actions { flex-direction: column; }
+  .quiz-results-actions .btn { justify-content: center; }
+  .fc-results-actions { flex-direction: column; align-items: center; }
+
+  /* ── Formules ── */
   .formulas-grid { grid-template-columns: 1fr; }
+  .formules-header { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+  .formula-search { width: 100%; }
+
+  /* ── Annales ── */
+  .exercise-questions { padding-left: 1rem; }
 }
