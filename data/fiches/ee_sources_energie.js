@@ -85,7 +85,7 @@ $$\\eta_{cellule} = \\frac{P_{max}}{E \\cdot S} \\quad (E = \\text{éclairement 
 
         <h3>Centrale nucléaire</h3>
         <p>Fonctionne comme une centrale thermique, mais la chaleur vient de la <strong>fission</strong> de l'uranium-235 :</p>
-        <div class="formula-block">$${}^{235}_{92}\\text{U} + n \\rightarrow \\text{produits de fission} + 2{,}5n + \\text{énergie}$$</div>
+        <div class="formula-block">$$^{235}_{92}\\text{U} + n \\rightarrow \\text{produits de fission} + 2{,}5n + \\text{énergie}$$</div>
         <p>Rendement thermique : ~33%. Pas d'émissions CO₂ en fonctionnement. Déchets radioactifs à gérer.</p>
 
         <h3>Mix énergétique français</h3>
