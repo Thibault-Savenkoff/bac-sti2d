@@ -1,3 +1,11 @@
+export function md(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    .replace(/\n/g, '<br>');
+}
+
 export function renderMath(container) {
   if (typeof renderMathInElement === 'function') {
     renderMathInElement(container, {

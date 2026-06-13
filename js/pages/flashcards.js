@@ -1,7 +1,7 @@
 import { SUBJECTS, getChapterById } from '../../data/subjects.js';
 import { renderSubjectFilter } from '../components/subjectFilter.js';
 import { getSRSCard, updateSRSCard, getDueCards, getSRSMastery, getAllDueCount } from '../store.js';
-import { shuffle, renderMath, pluralize } from '../utils.js';
+import { shuffle, renderMath, pluralize, md } from '../utils.js';
 
 const DECK_MODULES = {
   EE: () => import('../../data/flashcards/fc_ee.js'),
@@ -123,12 +123,12 @@ async function startSession(chapterId, root) {
             <div class="fc-card-inner">
               <div class="fc-card-front">
                 <div class="fc-card-label">Question</div>
-                <div class="fc-card-text">${card.front}</div>
+                <div class="fc-card-text">${md(card.front)}</div>
                 <button class="btn btn-primary fc-flip-btn" id="flip-btn">Retourner</button>
               </div>
               <div class="fc-card-back">
                 <div class="fc-card-label">Réponse</div>
-                <div class="fc-card-text">${card.back}</div>
+                <div class="fc-card-text">${md(card.back)}</div>
               </div>
             </div>
           </div>
