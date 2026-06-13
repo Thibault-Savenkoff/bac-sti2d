@@ -15,6 +15,12 @@ async function getAllCards() {
   return mods.flatMap(m => m.CARDS);
 }
 
+function cardBelongsTo(card, chapterId) {
+  if (card.chapterId === chapterId) return true;
+  if (Array.isArray(card.tags) && card.tags.includes(chapterId)) return true;
+  return false;
+}
+
 function buildQuestions(cards, allCards, count) {
   const cardsWithMCQ = cards.filter(c => c.mcq);
   const cardsWithoutMCQ = cards.filter(c => !c.mcq);
@@ -83,7 +89,7 @@ export async function renderQuiz(chapterId) {
       <h3 style="color:${s.color}">${s.label}</h3>
       <div class="quiz-chapter-list">
         ${s.chapters.map(ch => {
-          const cards = allCards.filter(c => c.chapterId === ch.id);
+          const cards = allCards.filter(c => cardBelongsTo(c, ch.id));
           const hist = getQuizHistory(ch.id);
           const last = hist[0];
           const lastScore = last ? `${Math.round((last.score/last.total)*100)}%` : null;
@@ -103,7 +109,7 @@ export async function renderQuiz(chapterId) {
 async function startQuiz(chapterId, root) {
   const info = getChapterById(chapterId);
   const allCards = await getAllCards();
-  const chCards = allCards.filter(c => c.chapterId === chapterId);
+  const chCards = allCards.filter(c => cardBelongsTo(c, chapterId));
 
   if (!chCards.length) {
     root.innerHTML = `<div class="quiz-empty">
