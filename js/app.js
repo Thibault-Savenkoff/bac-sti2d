@@ -6,6 +6,7 @@ import { renderFlashcards } from './pages/flashcards.js';
 import { renderQuiz } from './pages/quiz.js';
 import { renderFormules } from './pages/formules.js';
 import { renderAnnales } from './pages/annales.js';
+import { renderImprimer } from './pages/imprimer.js';
 import { getAllDueCount } from './store.js';
 
 // Load all cards for dashboard due-count badge
@@ -36,7 +37,12 @@ async function refreshNav() {
 renderNav(0);
 updateNavActive();
 
-window.addEventListener('hashchange', () => updateNavActive());
+window.addEventListener('hashchange', () => {
+  updateNavActive();
+  // Sortir du mode preview blanc si on navigue ailleurs
+  const hash = window.location.hash.replace(/^#\/?/, '').split('/')[0];
+  if (hash !== 'imprimer') document.body.classList.remove('print-preview');
+});
 
 registerRoute('', async () => {
   await refreshNav();
@@ -92,6 +98,16 @@ registerRoute('annales', async () => {
 registerRoute('annales/:chapterId', async ({ chapterId }) => {
   await refreshNav();
   await renderAnnales(chapterId);
+});
+
+registerRoute('imprimer', async () => {
+  await refreshNav();
+  await renderImprimer(null);
+});
+
+registerRoute('imprimer/:subjectId', async ({ subjectId }) => {
+  await refreshNav();
+  await renderImprimer(subjectId);
 });
 
 initRouter();

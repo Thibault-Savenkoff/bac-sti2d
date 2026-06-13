@@ -781,3 +781,133 @@ body.modal-open { overflow: hidden; }
   /* ── Annales ── */
   .exercise-questions { padding-left: 1rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MODE APERÇU IMPRESSION (sur écran aussi)
+   ═══════════════════════════════════════════════════════════════ */
+body.print-preview {
+  --bg: #fff;
+  --surface: #f3f4f6;
+  --surface-2: #e5e7eb;
+  --border: #d1d5db;
+  --text: #111827;
+  --text-muted: #6b7280;
+  --accent: #1d4ed8;
+  background: #fff !important;
+  color: #111827;
+}
+body.print-preview #main-nav,
+body.print-preview #filter-sidebar,
+body.print-preview .sidebar { display: none !important; }
+body.print-preview #app-root {
+  margin-left: 0 !important;
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+body.print-preview .btn-read,
+body.print-preview .fiche-toc { display: none !important; }
+body.print-preview .fiche-section-header { flex-direction: row !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+   IMPRESSION / PDF
+   ═══════════════════════════════════════════════════════════════ */
+@media print {
+  @page { margin: 1.2cm; size: A5 portrait; }
+
+  /* Redéfinir les variables CSS → tout devient noir/blanc automatiquement */
+  :root {
+    --bg: #fff !important;
+    --surface: #f3f4f6 !important;
+    --surface-2: #e5e7eb !important;
+    --border: #d1d5db !important;
+    --text: #111 !important;
+    --text-muted: #555 !important;
+    --accent: #111 !important;
+  }
+
+  /* Cacher l'interface */
+  #main-nav, .sidebar, #filter-sidebar,
+  .btn-read, .fiche-toc, .subject-badge,
+  .btn-print, .print-toolbar,
+  .fiche-card-read { display: none !important; }
+
+  /* Supprimer le décalage de la nav latérale */
+  #app-root {
+    margin-left: 0 !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+  body, html {
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 10pt;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+  .page-layout, .page-main { background: #fff !important; padding: 0 !important; }
+
+  /* Header */
+  .fiche-reader-header {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    border-bottom: 2pt solid #111 !important;
+    margin-bottom: 1rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+  .fiche-reader-header h1 { font-size: 15pt !important; color: #111 !important; }
+
+  /* Sections */
+  .fiche-section { break-inside: avoid-page; margin-bottom: 1rem !important; }
+  .fiche-section-header { flex-direction: row !important; align-items: center !important; }
+  .fiche-section-header h2 {
+    font-size: 11pt !important; font-weight: 700 !important;
+    color: #111 !important; border-bottom: 0.5pt solid #999;
+    padding-bottom: 2pt; margin-bottom: 0.3rem !important;
+  }
+
+  /* Contenu */
+  .fiche-section-content { line-height: 1.45 !important; font-size: 9.5pt !important; }
+  .fiche-section-content h3 { font-size: 9.5pt !important; font-weight: 700 !important; color: #111 !important; margin: 0.5rem 0 0.2rem !important; }
+  .fiche-section-content h4 { font-size: 9pt !important; color: #333 !important; }
+  .fiche-section-content p { margin-bottom: 0.25rem !important; }
+  .fiche-section-content ul,
+  .fiche-section-content ol { padding-left: 1.2rem !important; margin-bottom: 0.25rem !important; }
+
+  /* Formules */
+  .formula-block {
+    background: #f9fafb !important;
+    border: 0.5pt solid #ccc !important;
+    border-left: 3pt solid #111 !important;
+    padding: 0.35rem 0.6rem !important;
+    margin: 0.35rem 0 !important;
+    break-inside: avoid;
+  }
+
+  /* Boîtes */
+  .definition-box, .warning-box, .tip-box {
+    background: #f9fafb !important;
+    border: 0.5pt solid #aaa !important;
+    padding: 0.35rem 0.6rem !important;
+    margin: 0.35rem 0 !important;
+    break-inside: avoid;
+  }
+  .warning-box::before, .tip-box::before { content: none !important; }
+
+  /* Tableaux */
+  .fiche-section-content table {
+    font-size: 8.5pt !important;
+    overflow: visible !important;
+    display: table !important;
+    width: 100% !important;
+    break-inside: avoid;
+  }
+  .fiche-section-content th { background: #e5e7eb !important; color: #111 !important; }
+  .fiche-section-content th, .fiche-section-content td { border-color: #ccc !important; }
+
+  /* KaTeX */
+  .katex-display { overflow: visible !important; }
+
+  /* Sauts de page batch */
+  .print-page-break { break-before: page; }
+}

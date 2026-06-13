@@ -79,6 +79,7 @@ function renderFicheReader(chapterId) {
       <div class="fiche-reader-header" style="--subject-color:${subject.color}">
         <span class="subject-badge" style="background:${subject.colorBg};color:${subject.color}">${subject.shortLabel}</span>
         <h1>${chapter.label}</h1>
+        <button onclick="document.body.classList.add('print-preview');setTimeout(()=>window.print(),200)" class="btn btn-outline btn-print" style="margin-left:auto;white-space:nowrap">⎙ Imprimer / PDF</button>
       </div>
       <div class="fiche-loading">Chargement…</div>
     </div>`;
