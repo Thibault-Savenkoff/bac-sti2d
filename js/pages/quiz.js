@@ -37,13 +37,19 @@ function buildQuestions(cards, allCards, count) {
   }
 
   // Auto-generate MCQ from cards without explicit mcq field
-  const backPool = allCards.map(c => c.back);
+  // Prefer distractors from the same chapter, fallback to allCards
+  const truncate = t => t.length > 120 ? t.slice(0, 117) + '…' : t;
+  const sameChapterBacks = cards.map(c => c.back);
+  const allBacks = allCards.map(c => c.back);
   for (const card of cardsWithoutMCQ) {
-    const distractors = shuffle(backPool.filter(b => b !== card.back)).slice(0, 3);
+    const pool = shuffle(sameChapterBacks.filter(b => b !== card.back));
+    const distractors = pool.length >= 3
+      ? pool.slice(0, 3)
+      : shuffle(allBacks.filter(b => b !== card.back)).slice(0, 3);
     if (distractors.length < 3) continue;
     const choices = shuffle([
-      { text: card.back, correct: true },
-      ...distractors.map(t => ({ text: t, correct: false })),
+      { text: truncate(card.back), correct: true },
+      ...distractors.map(t => ({ text: truncate(t), correct: false })),
     ]);
     questions.push({
       cardId: card.id,
