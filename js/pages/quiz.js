@@ -125,16 +125,17 @@ async function startQuiz(chapterId, root) {
     return;
   }
 
-  const COUNTS = [10, 20, 30];
+  const COUNTS = [5, 10, 20, 30];
   const maxCount = Math.min(30, chCards.length);
+  const countOptions = [...new Set(COUNTS.filter(n => n <= maxCount).concat([maxCount]))];
 
   root.innerHTML = `
     <div class="quiz-config">
       <h2>${info?.chapter.label || chapterId}</h2>
       <p>Combien de questions ?</p>
       <div class="quiz-count-btns">
-        ${COUNTS.filter(n => n <= maxCount + 5).map(n => `
-          <button class="btn btn-outline quiz-count-btn" data-count="${Math.min(n, maxCount)}">${Math.min(n, maxCount)}</button>`).join('')}
+        ${countOptions.map(n => `
+          <button class="btn btn-outline quiz-count-btn" data-count="${n}">${n}</button>`).join('')}
       </div>
     </div>`;
 
