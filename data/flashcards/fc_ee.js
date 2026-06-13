@@ -98,6 +98,16 @@ export const CARDS = [
     id: 'ee_elec_001', chapterId: 'EE_ELEC', difficulty: 'easy',
     front: 'FCEM d\'un moteur à courant continu (formule).',
     back: '\\(E = k \\cdot \\Phi \\cdot n\\) — k : constante machine, Φ : flux inducteur, n : vitesse de rotation',
+    mcq: {
+      question: 'Si on double la vitesse de rotation d\'un MCC (flux Φ constant), la FCEM E :',
+      choices: [
+        { text: 'Double (E ∝ n)', correct: true },
+        { text: 'Est multipliée par 4 (E ∝ n²)', correct: false },
+        { text: 'Reste identique', correct: false },
+        { text: 'Est divisée par 2', correct: false },
+      ],
+      explanation: 'E = kΦn : la FCEM est proportionnelle à n. Doubler n → doubler E. C\'est pourquoi un MCC non chargé s\'emballe si le flux est coupé.'
+    }
   },
   {
     id: 'ee_elec_002', chapterId: 'EE_ELEC', difficulty: 'medium',
