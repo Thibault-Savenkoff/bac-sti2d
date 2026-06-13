@@ -14,16 +14,21 @@ async function getAllCards() {
   return mods.flatMap(m => m.CARDS);
 }
 
+function cardBelongsTo(card, chapterId) {
+  if (card.chapterId === chapterId) return true;
+  if (Array.isArray(card.tags) && card.tags.includes(chapterId)) return true;
+  return false;
+}
+
 async function getCardsForChapter(chapterId) {
   const [subjectId] = chapterId.split('_');
   const loader = DECK_MODULES[subjectId] || DECK_MODULES[chapterId];
   if (!loader) {
-    // Try all
     const all = await getAllCards();
-    return all.filter(c => c.chapterId === chapterId);
+    return all.filter(c => cardBelongsTo(c, chapterId));
   }
   const mod = await loader();
-  return mod.CARDS.filter(c => c.chapterId === chapterId);
+  return mod.CARDS.filter(c => cardBelongsTo(c, chapterId));
 }
 
 export async function renderFlashcards(chapterId) {
@@ -59,7 +64,7 @@ export async function renderFlashcards(chapterId) {
       <h3 style="color:${s.color}">${s.label}</h3>
       <div class="fc-chapter-list">
         ${s.chapters.map(ch => {
-          const cards = allCards.filter(c => c.chapterId === ch.id);
+          const cards = allCards.filter(c => cardBelongsTo(c, ch.id));
           const due = getDueCards(cards).length;
           const mastery = getSRSMastery(cards);
           return `
