@@ -11,13 +11,13 @@ const OVERLAY_CSS = `
   }
   .print-body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
-    font-size: 9pt;
-    line-height: 1.5;
+    font-size: 8pt;
+    line-height: 1.3;
     color: #1A1A2E;
     background: white;
     max-width: 14.8cm;
     margin: 0 auto;
-    padding: 1.5cm 1.2cm 1.2cm;
+    padding: 1cm 1.2cm 1cm;
     min-height: 100vh;
   }
 
@@ -32,7 +32,7 @@ const OVERLAY_CSS = `
     align-items: center;
     gap: 0.6rem;
     flex-wrap: wrap;
-    margin: -1.5cm -1.2cm 1.2rem;
+    margin: -1cm -1.2cm 0.8rem;
     z-index: 10;
   }
   #__po .__ptb button {
@@ -70,8 +70,8 @@ const OVERLAY_CSS = `
     background: var(--accent-light);
     border-left: 4pt solid var(--accent);
     border-radius: 0 8px 8px 0;
-    padding: 0.5rem 0.75rem 0.5rem 0.65rem;
-    margin-bottom: 0.9rem;
+    padding: 0.35rem 0.65rem 0.35rem 0.55rem;
+    margin-bottom: 0.5rem;
   }
   #__po .chapter-meta {
     display: inline-block;
@@ -83,10 +83,10 @@ const OVERLAY_CSS = `
     background: var(--accent-mid);
     border-radius: 20px;
     padding: 1pt 6pt;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.1rem;
   }
   #__po .chapter-title {
-    font-size: 14pt;
+    font-size: 12pt;
     font-weight: 800;
     margin: 0;
     color: #1A1A2E;
@@ -94,29 +94,29 @@ const OVERLAY_CSS = `
   }
 
   /* ── Sections ─────────────────────────────────────────────── */
-  #__po .fiche-section { margin-bottom: 0.85rem; border: none !important; }
+  #__po .fiche-section { margin-bottom: 0.4rem; border: none !important; }
   #__po .fiche-section h2 {
-    font-size: 7.5pt;
+    font-size: 6.5pt;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--badge-text);
     background: var(--accent-light);
     border-left: 3pt solid var(--accent);
-    padding: 2.5pt 6pt;
-    margin: 0.7rem 0 0.35rem;
+    padding: 2pt 5pt;
+    margin: 0.4rem 0 0.2rem;
     border-radius: 0 4px 4px 0;
     break-after: avoid;
   }
 
   /* ── Contenu ──────────────────────────────────────────────── */
-  #__po .fiche-section-content { font-size: 8.5pt; line-height: 1.45; }
-  #__po .fiche-section-content h3 { font-size: 8.5pt; font-weight: 700; margin: 0.45rem 0 0.15rem; color: var(--accent); }
-  #__po .fiche-section-content h4 { font-size: 8pt; font-weight: 600; margin: 0.3rem 0 0.1rem; color: #555; }
-  #__po .fiche-section-content p { margin: 0 0 0.25rem; }
+  #__po .fiche-section-content { font-size: 7.5pt !important; line-height: 1.3 !important; }
+  #__po .fiche-section-content h3 { font-size: 7.5pt; font-weight: 700; margin: 0.2rem 0 0.08rem; color: var(--accent); }
+  #__po .fiche-section-content h4 { font-size: 7pt; font-weight: 600; margin: 0.15rem 0 0.05rem; color: #555; }
+  #__po .fiche-section-content p { margin: 0 0 0.1rem; }
   #__po .fiche-section-content ul,
-  #__po .fiche-section-content ol { padding-left: 1.1rem; margin: 0.1rem 0 0.25rem; }
-  #__po .fiche-section-content li { margin-bottom: 0.1rem; }
+  #__po .fiche-section-content ol { padding-left: 1rem; margin: 0.05rem 0 0.1rem; }
+  #__po .fiche-section-content li { margin-bottom: 0.05rem; }
   #__po .fiche-section-content strong { font-weight: 700; }
   #__po .fiche-section-content em { font-style: italic; }
 
@@ -126,25 +126,25 @@ const OVERLAY_CSS = `
     border: 0.5pt solid var(--accent-mid);
     border-left: 3pt solid var(--accent);
     border-radius: 0 5px 5px 0;
-    padding: 0.35rem 0.6rem;
-    margin: 0.35rem 0;
-    font-size: 8pt;
+    padding: 0.2rem 0.5rem;
+    margin: 0.15rem 0;
+    font-size: 7.5pt;
     break-inside: avoid;
     overflow: visible;
   }
 
   /* ── Boîtes ───────────────────────────────────────────────── */
-  #__po .definition-box { background: #EFF6FF; border-left: 3pt solid #3B82F6; border-radius: 0 5px 5px 0; padding: 0.3rem 0.55rem; margin: 0.35rem 0; font-size: 8pt; break-inside: avoid; }
-  #__po .warning-box    { background: #FFFBEB; border-left: 3pt solid #F59E0B; border-radius: 0 5px 5px 0; padding: 0.3rem 0.55rem; margin: 0.35rem 0; font-size: 8pt; break-inside: avoid; }
-  #__po .tip-box        { background: #F0FDF4; border-left: 3pt solid #22C55E; border-radius: 0 5px 5px 0; padding: 0.3rem 0.55rem; margin: 0.35rem 0; font-size: 8pt; break-inside: avoid; }
+  #__po .definition-box { background: #EFF6FF; border-left: 3pt solid #3B82F6; border-radius: 0 5px 5px 0; padding: 0.15rem 0.4rem; margin: 0.12rem 0; font-size: 7.5pt; break-inside: avoid; }
+  #__po .warning-box    { background: #FFFBEB; border-left: 3pt solid #F59E0B; border-radius: 0 5px 5px 0; padding: 0.15rem 0.4rem; margin: 0.12rem 0; font-size: 7.5pt; break-inside: avoid; }
+  #__po .tip-box        { background: #F0FDF4; border-left: 3pt solid #22C55E; border-radius: 0 5px 5px 0; padding: 0.15rem 0.4rem; margin: 0.12rem 0; font-size: 7.5pt; break-inside: avoid; }
   #__po .warning-box::before,
   #__po .tip-box::before,
   #__po .definition-box::before { content: none !important; }
 
   /* ── Tableaux ─────────────────────────────────────────────── */
-  #__po .fiche-section-content table { width: 100%; border-collapse: collapse; font-size: 7.5pt; margin: 0.35rem 0; break-inside: avoid; }
-  #__po .fiche-section-content th { background: var(--accent-mid); color: var(--badge-text); font-weight: 700; border: 0.5pt solid var(--accent-mid); padding: 0.25rem 0.4rem; text-align: left; }
-  #__po .fiche-section-content td { border: 0.5pt solid #E2E8F0; padding: 0.2rem 0.4rem; vertical-align: top; }
+  #__po .fiche-section-content table { width: 100%; border-collapse: collapse; font-size: 7pt; margin: 0.15rem 0; break-inside: avoid; }
+  #__po .fiche-section-content th { background: var(--accent-mid); color: var(--badge-text); font-weight: 700; border: 0.5pt solid var(--accent-mid); padding: 0.15rem 0.3rem; text-align: left; }
+  #__po .fiche-section-content td { border: 0.5pt solid #E2E8F0; padding: 0.1rem 0.3rem; vertical-align: top; }
   #__po .fiche-section-content tr:nth-child(even) td { background: var(--accent-light); }
 
   /* ── KaTeX ────────────────────────────────────────────────── */
@@ -160,8 +160,13 @@ const OVERLAY_CSS = `
     @page { margin: 0; }
     body > *:not(#__po) { display: none !important; }
     #__po { position: static !important; background: white !important; overflow: visible !important; }
-    .print-body { max-width: none !important; margin: 0 !important; padding: 1.2cm !important; background: white !important; min-height: 0 !important; }
+    .print-body { max-width: none !important; margin: 0 !important; padding: 1cm 1.2cm !important; background: white !important; min-height: 0 !important; }
     #__po .__ptb { display: none !important; }
+    #__po hr { display: none !important; }
+    #__po .fiche-section-content p,
+    #__po .fiche-section-content li,
+    #__po .fiche-section-content h3,
+    #__po .fiche-section-content h4 { border: none !important; }
   }
 `;
 
