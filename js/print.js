@@ -3,7 +3,7 @@ const KATEX_JS  = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
 const KATEX_AR  = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js';
 
 const PRINT_CSS = `
-  @page { size: A5 portrait; margin: 1.2cm; }
+  @page { margin: 1.2cm; }
 
   /* Force l'impression des fonds sur tous les navigateurs (Safari inclus) */
   * {
