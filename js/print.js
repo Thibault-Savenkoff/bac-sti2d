@@ -94,7 +94,7 @@ const OVERLAY_CSS = `
   }
 
   /* ── Sections ─────────────────────────────────────────────── */
-  #__po .fiche-section { margin-bottom: 0.85rem; break-inside: avoid-page; }
+  #__po .fiche-section { margin-bottom: 0.85rem; border: none !important; }
   #__po .fiche-section h2 {
     font-size: 7.5pt;
     font-weight: 800;
@@ -106,6 +106,7 @@ const OVERLAY_CSS = `
     padding: 2.5pt 6pt;
     margin: 0.7rem 0 0.35rem;
     border-radius: 0 4px 4px 0;
+    break-after: avoid;
   }
 
   /* ── Contenu ──────────────────────────────────────────────── */
