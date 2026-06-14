@@ -7,6 +7,7 @@ const TABS = [
   { id: 'quiz',       label: 'Quiz',        icon: '✏️' },
   { id: 'formules',   label: 'Formules',    icon: '∑' },
   { id: 'annales',    label: 'Annales',     icon: '📝' },
+  { id: 'imprimer',   label: 'Imprimer',    icon: '⎙' },
 ];
 
 export function renderNav(dueCount = 0) {

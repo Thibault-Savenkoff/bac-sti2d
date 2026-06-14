@@ -2,6 +2,7 @@ import { SUBJECTS, getChapterById, getAllChapters } from '../../data/subjects.js
 import { renderSubjectFilter } from '../components/subjectFilter.js';
 import { markSectionRead, getFichesRead } from '../store.js';
 import { renderMath } from '../utils.js';
+import { printFiche } from '../print.js';
 
 const FICHE_MODULES = {
   EE_CHAIN: () => import('../../data/fiches/ee_chaine_energie.js'),
@@ -79,7 +80,7 @@ function renderFicheReader(chapterId) {
       <div class="fiche-reader-header" style="--subject-color:${subject.color}">
         <span class="subject-badge" style="background:${subject.colorBg};color:${subject.color}">${subject.shortLabel}</span>
         <h1>${chapter.label}</h1>
-        <button onclick="document.body.classList.add('print-preview');setTimeout(()=>window.print(),200)" class="btn btn-outline btn-print" style="margin-left:auto;white-space:nowrap">⎙ Imprimer / PDF</button>
+        <button id="btn-print-fiche" class="btn btn-outline btn-print" style="margin-left:auto;white-space:nowrap">⎙ Imprimer / PDF</button>
       </div>
       <div class="fiche-loading">Chargement…</div>
     </div>`;
@@ -132,5 +133,10 @@ async function loadFiche(chapterId) {
       btn.classList.add('read');
       btn.textContent = '✓ Lu';
     });
+  });
+
+  const info = getChapterById(chapterId);
+  document.getElementById('btn-print-fiche')?.addEventListener('click', () => {
+    printFiche(chapterId, fiche, info.subject);
   });
 }

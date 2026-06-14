@@ -37,12 +37,7 @@ async function refreshNav() {
 renderNav(0);
 updateNavActive();
 
-window.addEventListener('hashchange', () => {
-  updateNavActive();
-  // Sortir du mode preview blanc si on navigue ailleurs
-  const hash = window.location.hash.replace(/^#\/?/, '').split('/')[0];
-  if (hash !== 'imprimer') document.body.classList.remove('print-preview');
-});
+window.addEventListener('hashchange', () => updateNavActive());
 
 registerRoute('', async () => {
   await refreshNav();
