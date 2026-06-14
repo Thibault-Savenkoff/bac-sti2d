@@ -1,77 +1,41 @@
-const KATEX_CSS = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css';
-const KATEX_JS  = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
-const KATEX_AR  = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js';
+import { renderMath } from './utils.js';
 
-const PRINT_CSS = `
-  @page { margin: 1.2cm; }
-
-  /* Force l'impression des fonds sur tous les navigateurs (Safari inclus) */
-  * {
-    box-sizing: border-box;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  /* ── Couleurs par matière ─────────────────────────────────── */
-  :root {
-    --accent:       #3B82F6;
-    --accent-light: #EFF6FF;
-    --accent-mid:   #BFDBFE;
-    --badge-text:   #1E3A8A;
-  }
-  .subject-ee {
-    --accent:       #16A34A;
-    --accent-light: #F0FDF4;
-    --accent-mid:   #BBF7D0;
-    --badge-text:   #14532D;
-  }
-  .subject-pc {
-    --accent:       #9333EA;
-    --accent-light: #FAF5FF;
-    --accent-mid:   #E9D5FF;
-    --badge-text:   #581C87;
-  }
-  .subject-maths {
-    --accent:       #EA580C;
-    --accent-light: #FFF7ED;
-    --accent-mid:   #FED7AA;
-    --badge-text:   #7C2D12;
-  }
-
-  /* ── Fond gris sur écran (effet "feuille blanche") ───────── */
-  html {
+const OVERLAY_CSS = `
+  /* ── Overlay plein écran (sur écran) ─────────────────────── */
+  #__po {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    overflow-y: auto;
     background: #E8EAF0;
   }
-
-  /* ── Page A5 centrée (écran) — remplie à l'impression ────── */
-  body {
+  .print-body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 9pt;
     line-height: 1.5;
     color: #1A1A2E;
     background: white;
-    /* Centré à la largeur A5 sur écran */
     max-width: 14.8cm;
     margin: 0 auto;
     padding: 1.5cm 1.2cm 1.2cm;
+    min-height: 100vh;
   }
 
-  /* ── Barre d'outils (masquée à l'impression) ─────────────── */
-  .toolbar {
+  /* ── Barre d'outils ──────────────────────────────────────── */
+  #__po .__ptb {
     position: sticky;
     top: 0;
-    background: rgba(255, 255, 255, 0.97);
+    background: rgba(255,255,255,0.97);
     border-bottom: 1px solid #E2E8F0;
     padding: 0.5rem 0.8rem;
     display: flex;
     align-items: center;
     gap: 0.6rem;
     flex-wrap: wrap;
-    /* Débord jusqu'aux bords du padding body */
     margin: -1.5cm -1.2cm 1.2rem;
     z-index: 10;
   }
-  .toolbar button {
+  #__po .__ptb button {
     padding: 0.35rem 0.9rem;
     border: 1.5px solid #CBD5E1;
     border-radius: 20px;
@@ -81,29 +45,35 @@ const PRINT_CSS = `
     font-weight: 600;
     color: #374151;
   }
-  .toolbar .btn-primary {
+  #__po .__ptb .btn-primary {
     background: #3B82F6;
     color: #fff;
     border-color: #3B82F6;
   }
-  .toolbar .hint {
+  #__po .__ptb .hint {
     font-size: 0.7rem;
     color: #64748B;
     flex: 1;
     min-width: 160px;
     line-height: 1.3;
   }
-  .toolbar .hint strong { color: #334155; }
+  #__po .__ptb .hint strong { color: #334155; }
+
+  /* ── Couleurs par matière ─────────────────────────────────── */
+  #__po { --accent: #3B82F6; --accent-light: #EFF6FF; --accent-mid: #BFDBFE; --badge-text: #1E3A8A; }
+  #__po .subject-ee    { --accent: #16A34A; --accent-light: #F0FDF4; --accent-mid: #BBF7D0; --badge-text: #14532D; }
+  #__po .subject-pc    { --accent: #9333EA; --accent-light: #FAF5FF; --accent-mid: #E9D5FF; --badge-text: #581C87; }
+  #__po .subject-maths { --accent: #EA580C; --accent-light: #FFF7ED; --accent-mid: #FED7AA; --badge-text: #7C2D12; }
 
   /* ── En-tête de chapitre ──────────────────────────────────── */
-  .chapter-header {
+  #__po .chapter-header {
     background: var(--accent-light);
     border-left: 4pt solid var(--accent);
     border-radius: 0 8px 8px 0;
     padding: 0.5rem 0.75rem 0.5rem 0.65rem;
     margin-bottom: 0.9rem;
   }
-  .chapter-meta {
+  #__po .chapter-meta {
     display: inline-block;
     font-size: 6pt;
     font-weight: 800;
@@ -115,7 +85,7 @@ const PRINT_CSS = `
     padding: 1pt 6pt;
     margin-bottom: 0.25rem;
   }
-  .chapter-title {
+  #__po .chapter-title {
     font-size: 14pt;
     font-weight: 800;
     margin: 0;
@@ -124,11 +94,8 @@ const PRINT_CSS = `
   }
 
   /* ── Sections ─────────────────────────────────────────────── */
-  .fiche-section {
-    margin-bottom: 0.85rem;
-    break-inside: avoid-page;
-  }
-  .fiche-section h2 {
+  #__po .fiche-section { margin-bottom: 0.85rem; break-inside: avoid-page; }
+  #__po .fiche-section h2 {
     font-size: 7.5pt;
     font-weight: 800;
     text-transform: uppercase;
@@ -142,31 +109,18 @@ const PRINT_CSS = `
   }
 
   /* ── Contenu ──────────────────────────────────────────────── */
-  .fiche-section-content { font-size: 8.5pt; line-height: 1.45; }
-  .fiche-section-content h3 {
-    font-size: 8.5pt;
-    font-weight: 700;
-    margin: 0.45rem 0 0.15rem;
-    color: var(--accent);
-  }
-  .fiche-section-content h4 {
-    font-size: 8pt;
-    font-weight: 600;
-    margin: 0.3rem 0 0.1rem;
-    color: #555;
-  }
-  .fiche-section-content p { margin: 0 0 0.25rem; }
-  .fiche-section-content ul,
-  .fiche-section-content ol {
-    padding-left: 1.1rem;
-    margin: 0.1rem 0 0.25rem;
-  }
-  .fiche-section-content li { margin-bottom: 0.1rem; }
-  .fiche-section-content strong { font-weight: 700; }
-  .fiche-section-content em { font-style: italic; }
+  #__po .fiche-section-content { font-size: 8.5pt; line-height: 1.45; }
+  #__po .fiche-section-content h3 { font-size: 8.5pt; font-weight: 700; margin: 0.45rem 0 0.15rem; color: var(--accent); }
+  #__po .fiche-section-content h4 { font-size: 8pt; font-weight: 600; margin: 0.3rem 0 0.1rem; color: #555; }
+  #__po .fiche-section-content p { margin: 0 0 0.25rem; }
+  #__po .fiche-section-content ul,
+  #__po .fiche-section-content ol { padding-left: 1.1rem; margin: 0.1rem 0 0.25rem; }
+  #__po .fiche-section-content li { margin-bottom: 0.1rem; }
+  #__po .fiche-section-content strong { font-weight: 700; }
+  #__po .fiche-section-content em { font-style: italic; }
 
   /* ── Formules ─────────────────────────────────────────────── */
-  .formula-block {
+  #__po .formula-block {
     background: var(--accent-light);
     border: 0.5pt solid var(--accent-mid);
     border-left: 3pt solid var(--accent);
@@ -179,95 +133,50 @@ const PRINT_CSS = `
   }
 
   /* ── Boîtes ───────────────────────────────────────────────── */
-  .definition-box {
-    background: #EFF6FF;
-    border-left: 3pt solid #3B82F6;
-    border-radius: 0 5px 5px 0;
-    padding: 0.3rem 0.55rem;
-    margin: 0.35rem 0;
-    font-size: 8pt;
-    break-inside: avoid;
-  }
-  .warning-box {
-    background: #FFFBEB;
-    border-left: 3pt solid #F59E0B;
-    border-radius: 0 5px 5px 0;
-    padding: 0.3rem 0.55rem;
-    margin: 0.35rem 0;
-    font-size: 8pt;
-    break-inside: avoid;
-  }
-  .tip-box {
-    background: #F0FDF4;
-    border-left: 3pt solid #22C55E;
-    border-radius: 0 5px 5px 0;
-    padding: 0.3rem 0.55rem;
-    margin: 0.35rem 0;
-    font-size: 8pt;
-    break-inside: avoid;
-  }
-  .warning-box::before, .tip-box::before, .definition-box::before { content: none !important; }
+  #__po .definition-box { background: #EFF6FF; border-left: 3pt solid #3B82F6; border-radius: 0 5px 5px 0; padding: 0.3rem 0.55rem; margin: 0.35rem 0; font-size: 8pt; break-inside: avoid; }
+  #__po .warning-box    { background: #FFFBEB; border-left: 3pt solid #F59E0B; border-radius: 0 5px 5px 0; padding: 0.3rem 0.55rem; margin: 0.35rem 0; font-size: 8pt; break-inside: avoid; }
+  #__po .tip-box        { background: #F0FDF4; border-left: 3pt solid #22C55E; border-radius: 0 5px 5px 0; padding: 0.3rem 0.55rem; margin: 0.35rem 0; font-size: 8pt; break-inside: avoid; }
+  #__po .warning-box::before,
+  #__po .tip-box::before,
+  #__po .definition-box::before { content: none !important; }
 
   /* ── Tableaux ─────────────────────────────────────────────── */
-  .fiche-section-content table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 7.5pt;
-    margin: 0.35rem 0;
-    break-inside: avoid;
-  }
-  .fiche-section-content th {
-    background: var(--accent-mid);
-    color: var(--badge-text);
-    font-weight: 700;
-    border: 0.5pt solid var(--accent-mid);
-    padding: 0.25rem 0.4rem;
-    text-align: left;
-  }
-  .fiche-section-content td {
-    border: 0.5pt solid #E2E8F0;
-    padding: 0.2rem 0.4rem;
-    vertical-align: top;
-  }
-  .fiche-section-content tr:nth-child(even) td {
-    background: var(--accent-light);
-  }
+  #__po .fiche-section-content table { width: 100%; border-collapse: collapse; font-size: 7.5pt; margin: 0.35rem 0; break-inside: avoid; }
+  #__po .fiche-section-content th { background: var(--accent-mid); color: var(--badge-text); font-weight: 700; border: 0.5pt solid var(--accent-mid); padding: 0.25rem 0.4rem; text-align: left; }
+  #__po .fiche-section-content td { border: 0.5pt solid #E2E8F0; padding: 0.2rem 0.4rem; vertical-align: top; }
+  #__po .fiche-section-content tr:nth-child(even) td { background: var(--accent-light); }
 
   /* ── KaTeX ────────────────────────────────────────────────── */
-  .katex { font-size: 1em; }
-  .katex-display { margin: 0.25rem 0; overflow: visible; }
+  #__po .katex { font-size: 1em; }
+  #__po .katex-display { margin: 0.25rem 0; overflow: visible; }
 
   /* ── Saut de page batch ───────────────────────────────────── */
-  .page-break { break-before: page; }
+  #__po .page-break { break-before: page; }
 
   /* ── Impression ───────────────────────────────────────────── */
   @media print {
-    html { background: white; }
-    .toolbar { display: none !important; }
-    body {
-      max-width: none;
-      margin: 0;
-      padding: 0;
-      background: white;
-    }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    @page { margin: 1.2cm; }
+    body > *:not(#__po) { display: none !important; }
+    #__po { position: static !important; background: white !important; overflow: visible !important; }
+    .print-body { max-width: none !important; margin: 0 !important; padding: 0 !important; background: white !important; min-height: 0 !important; }
+    #__po .__ptb { display: none !important; }
   }
 `;
 
-function buildToolbar(isMobile, isSafari) {
+function buildToolbarHtml(isMobile, isSafari) {
   let hint;
   if (isMobile) {
     hint = `<span class="hint">iPhone : Imprimer → maintenir l'aperçu → Partager → « Enregistrer dans Fichiers »</span>`;
   } else if (isSafari) {
-    hint = `<span class="hint">
-      Safari : dans la boîte de dialogue, <strong>cocher « Imprimer les fonds »</strong> et choisir le format <strong>A5</strong> si disponible.
-    </span>`;
+    hint = `<span class="hint">Safari : <strong>cocher « Imprimer les fonds »</strong> et choisir le format <strong>A5</strong>.</span>`;
   } else {
-    hint = `<span class="hint">Dans le dialogue : choisir « Enregistrer en PDF » et format <strong>A5</strong>.</span>`;
+    hint = `<span class="hint">Choisir « Enregistrer en PDF » et format <strong>A5</strong>.</span>`;
   }
   return `
-    <div class="toolbar">
+    <div class="__ptb">
       <button class="btn-primary" onclick="window.print()">⎙ Imprimer / PDF</button>
-      <button onclick="window.close()">✕ Fermer</button>
+      <button onclick="document.getElementById('__po')?.remove();document.getElementById('__pcs')?.remove()">✕ Fermer</button>
       ${hint}
     </div>`;
 }
@@ -295,38 +204,34 @@ export function openPrintWindow(bodyHtml, title) {
   const isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
   const isSafari = !isMobile && /^((?!chrome|android).)*safari/i.test(ua);
 
-  const html = `<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>${title}</title>
-  <link rel="stylesheet" href="${KATEX_CSS}">
-  <script defer src="${KATEX_JS}"></script>
-  <script defer src="${KATEX_AR}"
-    onload="renderMathInElement(document.body,{delimiters:[
-      {left:'$$',right:'$$',display:true},
-      {left:'\\\\[',right:'\\\\]',display:true},
-      {left:'$',right:'$',display:false},
-      {left:'\\\\(',right:'\\\\)',display:false}
-    ],throwOnError:false})"></script>
-  <style>${PRINT_CSS}</style>
-</head>
-<body>
-  ${buildToolbar(isMobile, isSafari)}
-  ${bodyHtml}
-</body>
-</html>`;
+  // Supprimer l'overlay précédent si présent
+  document.getElementById('__po')?.remove();
+  document.getElementById('__pcs')?.remove();
 
-  const blob = new Blob([html], { type: 'text/html' });
-  const url = URL.createObjectURL(blob);
-  const win = window.open(url, '_blank');
-  if (!win) {
-    URL.revokeObjectURL(url);
-    alert('Le navigateur a bloqué l\'ouverture d\'une nouvelle fenêtre. Autorise les pop-ups pour ce site.');
-    return;
-  }
-  setTimeout(() => URL.revokeObjectURL(url), 60000);
+  // Injecter le CSS dans le <head> de la page principale
+  const styleEl = document.createElement('style');
+  styleEl.id = '__pcs';
+  styleEl.textContent = OVERLAY_CSS;
+  document.head.appendChild(styleEl);
+
+  // Créer et injecter l'overlay
+  const overlay = document.createElement('div');
+  overlay.id = '__po';
+  overlay.innerHTML = `
+    <div class="print-body">
+      ${buildToolbarHtml(isMobile, isSafari)}
+      ${bodyHtml}
+    </div>`;
+  document.body.appendChild(overlay);
+
+  // Rendre les formules KaTeX (déjà chargé par la page principale)
+  renderMath(overlay);
+
+  // Nettoyage après impression
+  window.addEventListener('afterprint', () => {
+    overlay.remove();
+    styleEl.remove();
+  }, { once: true });
 }
 
 export async function printFiche(chapterId, fiche, subject) {
