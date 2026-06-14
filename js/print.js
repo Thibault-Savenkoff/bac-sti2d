@@ -156,10 +156,10 @@ const OVERLAY_CSS = `
   /* ── Impression ───────────────────────────────────────────── */
   @media print {
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    @page { margin: 1.2cm; }
+    @page { margin: 0; }
     body > *:not(#__po) { display: none !important; }
     #__po { position: static !important; background: white !important; overflow: visible !important; }
-    .print-body { max-width: none !important; margin: 0 !important; padding: 0 !important; background: white !important; min-height: 0 !important; }
+    .print-body { max-width: none !important; margin: 0 !important; padding: 1.2cm !important; background: white !important; min-height: 0 !important; }
     #__po .__ptb { display: none !important; }
   }
 `;
