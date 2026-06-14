@@ -318,13 +318,15 @@ export function openPrintWindow(bodyHtml, title) {
 </body>
 </html>`;
 
-  const win = window.open('', '_blank');
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const win = window.open(url, '_blank');
   if (!win) {
+    URL.revokeObjectURL(url);
     alert('Le navigateur a bloqué l\'ouverture d\'une nouvelle fenêtre. Autorise les pop-ups pour ce site.');
     return;
   }
-  win.document.write(html);
-  win.document.close();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 
 export async function printFiche(chapterId, fiche, subject) {
