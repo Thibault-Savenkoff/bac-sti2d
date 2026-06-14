@@ -169,7 +169,7 @@ function buildToolbarHtml(isMobile, isSafari) {
   if (isMobile) {
     hint = `<span class="hint">iPhone : Imprimer → maintenir l'aperçu → Partager → « Enregistrer dans Fichiers »</span>`;
   } else if (isSafari) {
-    hint = `<span class="hint">Safari : <strong>cocher « Imprimer les fonds »</strong> et choisir le format <strong>A5</strong>.</span>`;
+    hint = `<span class="hint">Safari : <strong>cocher « Imprimer les fonds »</strong>, <strong>décocher « En-têtes et pieds de page »</strong>, choisir <strong>A5</strong>.</span>`;
   } else {
     hint = `<span class="hint">Choisir « Enregistrer en PDF » et format <strong>A5</strong>.</span>`;
   }
@@ -227,8 +227,24 @@ export function openPrintWindow(bodyHtml, title) {
   // Rendre les formules KaTeX (déjà chargé par la page principale)
   renderMath(overlay);
 
+  // Vider le titre pendant l'impression pour supprimer l'en-tête Safari
+  const savedTitle = document.title;
+  const printBtn = overlay.querySelector('.btn-primary');
+  if (printBtn) {
+    printBtn.addEventListener('click', () => {
+      document.title = '';
+      requestAnimationFrame(() => {
+        window.print();
+        document.title = savedTitle;
+      });
+    }, { once: false });
+    // Remplacer le onclick inline par rien (on gère via addEventListener)
+    printBtn.removeAttribute('onclick');
+  }
+
   // Nettoyage après impression
   window.addEventListener('afterprint', () => {
+    document.title = savedTitle;
     overlay.remove();
     styleEl.remove();
   }, { once: true });
