@@ -173,12 +173,12 @@
 
     /* ── Impression ───────────────────────────────────────────── */
     @media print {
-      @page { margin: 1.2cm; }
+      @page { size: A4 landscape; margin: 1.2cm; }
       html { background: white; }
       .toolbar { display: none !important; }
       .page {
-        max-width: none;
-        margin: 0;
+        max-width: 14.8cm;
+        margin: 0 auto;
         padding: 0;
         box-shadow: none;
         min-height: 0;
@@ -208,9 +208,9 @@
       if (isMobile) {
         hint.textContent = 'iPhone : Imprimer → maintenir l’aperçu → Partager → « Enregistrer dans Fichiers »';
       } else if (isSafari) {
-        hint.innerHTML = 'Safari : <strong>cocher « Imprimer les fonds »</strong>, <strong>décocher « En-têtes et pieds »</strong>, choisir <strong>A5</strong>.';
+        hint.innerHTML = 'Format déjà en <strong>A4 paysage</strong> — ne pas le changer. Cocher <strong>« Imprimer les fonds »</strong> puis cliquer directement sur <strong>Enregistrer en PDF</strong>.';
       } else {
-        hint.innerHTML = 'Choisir « Enregistrer en PDF » et format <strong>A5</strong>.';
+        hint.innerHTML = 'Format déjà en <strong>A4 paysage</strong>. Choisir « Enregistrer en PDF » et cliquer Enregistrer.';
       }
 
       var key = location.hash.slice(1);
