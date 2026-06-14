@@ -5,7 +5,12 @@ const KATEX_AR  = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-r
 const PRINT_CSS = `
   @page { size: A5 portrait; margin: 1.2cm; }
 
-  * { box-sizing: border-box; }
+  /* Force l'impression des fonds sur tous les navigateurs (Safari inclus) */
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 
   /* ── Couleurs par matière ─────────────────────────────────── */
   :root {
@@ -33,30 +38,37 @@ const PRINT_CSS = `
     --badge-text:   #7C2D12;
   }
 
+  /* ── Fond gris sur écran (effet "feuille blanche") ───────── */
+  html {
+    background: #E8EAF0;
+  }
+
+  /* ── Page A5 centrée (écran) — remplie à l'impression ────── */
   body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     font-size: 9pt;
     line-height: 1.5;
     color: #1A1A2E;
-    background: #fff;
-    margin: 0;
-    padding: 0.5cm 0.8cm;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    background: white;
+    /* Centré à la largeur A5 sur écran */
+    max-width: 14.8cm;
+    margin: 0 auto;
+    padding: 1.5cm 1.2cm 1.2cm;
   }
 
   /* ── Barre d'outils (masquée à l'impression) ─────────────── */
   .toolbar {
     position: sticky;
     top: 0;
-    background: #F8FAFC;
+    background: rgba(255, 255, 255, 0.97);
     border-bottom: 1px solid #E2E8F0;
     padding: 0.5rem 0.8rem;
     display: flex;
     align-items: center;
     gap: 0.6rem;
     flex-wrap: wrap;
-    margin: -0.5cm -0.8cm 1.2rem;
+    /* Débord jusqu'aux bords du padding body */
+    margin: -1.5cm -1.2cm 1.2rem;
     z-index: 10;
   }
   .toolbar button {
@@ -75,11 +87,13 @@ const PRINT_CSS = `
     border-color: #3B82F6;
   }
   .toolbar .hint {
-    font-size: 0.72rem;
-    color: #94A3B8;
+    font-size: 0.7rem;
+    color: #64748B;
     flex: 1;
-    min-width: 150px;
+    min-width: 160px;
+    line-height: 1.3;
   }
+  .toolbar .hint strong { color: #334155; }
 
   /* ── En-tête de chapitre ──────────────────────────────────── */
   .chapter-header {
@@ -192,7 +206,6 @@ const PRINT_CSS = `
     font-size: 8pt;
     break-inside: avoid;
   }
-  /* Désactive les ::before injectés par le CSS principal */
   .warning-box::before, .tip-box::before, .definition-box::before { content: none !important; }
 
   /* ── Tableaux ─────────────────────────────────────────────── */
@@ -227,20 +240,35 @@ const PRINT_CSS = `
   /* ── Saut de page batch ───────────────────────────────────── */
   .page-break { break-before: page; }
 
+  /* ── Impression ───────────────────────────────────────────── */
   @media print {
+    html { background: white; }
     .toolbar { display: none !important; }
-    body { padding: 0; }
+    body {
+      max-width: none;
+      margin: 0;
+      padding: 0;
+      background: white;
+    }
   }
 `;
 
-function buildToolbar(isMobile) {
-  const iosHint = `<span class="hint">iPhone : Imprimer → maintenir l'aperçu → Partager → « Enregistrer dans Fichiers »</span>`;
-  const desktopHint = `<span class="hint">Dans le dialogue : choisir « Enregistrer en PDF »</span>`;
+function buildToolbar(isMobile, isSafari) {
+  let hint;
+  if (isMobile) {
+    hint = `<span class="hint">iPhone : Imprimer → maintenir l'aperçu → Partager → « Enregistrer dans Fichiers »</span>`;
+  } else if (isSafari) {
+    hint = `<span class="hint">
+      Safari : dans la boîte de dialogue, <strong>cocher « Imprimer les fonds »</strong> et choisir le format <strong>A5</strong> si disponible.
+    </span>`;
+  } else {
+    hint = `<span class="hint">Dans le dialogue : choisir « Enregistrer en PDF » et format <strong>A5</strong>.</span>`;
+  }
   return `
     <div class="toolbar">
-      <button class="btn-primary" onclick="window.print()">⎙ Imprimer / Enregistrer en PDF</button>
+      <button class="btn-primary" onclick="window.print()">⎙ Imprimer / PDF</button>
       <button onclick="window.close()">✕ Fermer</button>
-      ${isMobile ? iosHint : desktopHint}
+      ${hint}
     </div>`;
 }
 
@@ -263,7 +291,10 @@ function buildChapterHtml(fiche, subject, isFirst) {
 }
 
 export function openPrintWindow(bodyHtml, title) {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const ua = navigator.userAgent;
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
+  const isSafari = !isMobile && /^((?!chrome|android).)*safari/i.test(ua);
+
   const html = `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -282,7 +313,7 @@ export function openPrintWindow(bodyHtml, title) {
   <style>${PRINT_CSS}</style>
 </head>
 <body>
-  ${buildToolbar(isMobile)}
+  ${buildToolbar(isMobile, isSafari)}
   ${bodyHtml}
 </body>
 </html>`;
