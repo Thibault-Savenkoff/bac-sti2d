@@ -3,69 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Impression</title>
+  <title>Fiche</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <style>
-    /* ── Reset propre ─────────────────────────────────────────── */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
 
-    /* ── Couleurs par matière ─────────────────────────────────── */
-    :root { --accent:#3B82F6; --accent-light:#EFF6FF; --accent-mid:#BFDBFE; --badge-text:#1E3A8A; }
+    /* ── Couleurs par matière ─────────────────────────────── */
+    :root          { --accent:#3B82F6; --accent-light:#EFF6FF; --accent-mid:#BFDBFE; --badge-text:#1E3A8A; }
     .subject-ee    { --accent:#16A34A; --accent-light:#F0FDF4; --accent-mid:#BBF7D0; --badge-text:#14532D; }
     .subject-pc    { --accent:#9333EA; --accent-light:#FAF5FF; --accent-mid:#E9D5FF; --badge-text:#581C87; }
     .subject-maths { --accent:#EA580C; --accent-light:#FFF7ED; --accent-mid:#FED7AA; --badge-text:#7C2D12; }
 
-    /* ── Base ─────────────────────────────────────────────────── */
-    html {
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      font-size: 7.5pt;
-      line-height: 1.35;
-      color: #111827;
-      background: #E8EAF0;
-    }
+    html { font-family: 'Helvetica Neue', Arial, sans-serif; background: #E8EAF0; }
+    body { margin: 0; padding: 0; }
 
-    /* ── Barre d'outils ───────────────────────────────────────── */
+    /* ── Barre fixe ───────────────────────────────────────── */
     .toolbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      background: #fff;
-      border-bottom: 1px solid #E2E8F0;
-      padding: 0.45rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+      position: fixed; top: 0; left: 0; right: 0;
+      background: #fff; border-bottom: 1px solid #e2e8f0;
+      padding: 0.5rem 1rem;
+      display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
       z-index: 1000;
     }
     .toolbar button {
-      padding: 0.28rem 0.75rem;
-      border: 1.5px solid #CBD5E1;
-      border-radius: 99px;
-      background: #fff;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 600;
-      color: #374151;
+      padding: 0.32rem 0.9rem;
+      border: 1.5px solid #CBD5E1; border-radius: 99px;
+      background: #fff; cursor: pointer;
+      font-size: 13px; font-weight: 600; color: #374151;
     }
-    .toolbar .btn-primary { background:#3B82F6; color:#fff; border-color:#3B82F6; }
-    .toolbar .hint { font-size: 10px; color:#64748B; flex:1; min-width:180px; line-height:1.3; }
-    .toolbar .hint strong { color:#334155; }
+    .toolbar .btn-primary { background: #3B82F6; color: #fff; border-color: #3B82F6; }
+    .toolbar .btn-primary:disabled { background: #93c5fd; border-color: #93c5fd; cursor: wait; }
+    .toolbar .hint { font-size: 11px; color: #64748b; flex: 1; min-width: 160px; line-height: 1.35; }
 
-    /* ── Feuille centrée (aperçu écran) ───────────────────────── */
-    .page {
+    /* ── Aperçu écran ─────────────────────────────────────── */
+    .preview {
       max-width: 14.8cm;
-      margin: 3.2rem auto 2rem;
+      margin: 4rem auto 2rem;
       background: white;
       padding: 1.2cm;
       box-shadow: 0 4px 24px rgba(0,0,0,0.13);
       min-height: 18.6cm;
     }
 
-    /* ── En-tête du chapitre ──────────────────────────────────── */
+    /* ── Contenu fiche ────────────────────────────────────── */
+    #content { font-size: 7.5pt; line-height: 1.35; color: #111827; }
+
     .chapter-header {
       background: var(--accent-light);
       border-left: 4pt solid var(--accent);
@@ -75,169 +57,171 @@
     }
     .chapter-meta {
       display: inline-block;
-      font-size: 5.5pt;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--badge-text);
-      background: var(--accent-mid);
-      border-radius: 99px;
-      padding: 0.5pt 5pt;
+      font-size: 5.5pt; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--badge-text); background: var(--accent-mid);
+      border-radius: 99px; padding: 0.5pt 5pt;
       margin-bottom: 0.1rem;
     }
     .chapter-title {
-      font-size: 13pt;
-      font-weight: 800;
-      line-height: 1.15;
-      color: #111827;
-      margin: 0;
+      font-size: 13pt; font-weight: 800;
+      line-height: 1.15; color: #111827; margin: 0;
     }
 
-    /* ── Sections ─────────────────────────────────────────────── */
     .fiche-section { margin-bottom: 0.42rem; }
     .fiche-section > h2 {
-      font-size: 6.5pt;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--badge-text);
-      background: var(--accent-light);
+      font-size: 6.5pt; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--badge-text); background: var(--accent-light);
       border-left: 2.5pt solid var(--accent);
-      padding: 2pt 5pt;
-      margin: 0 0 0.18rem;
+      padding: 2pt 5pt; margin: 0 0 0.18rem;
       border-radius: 0 3px 3px 0;
-      break-after: avoid;
     }
 
-    /* ── Contenu ──────────────────────────────────────────────── */
     .fiche-section-content { font-size: 7.5pt; line-height: 1.35; }
-    .fiche-section-content h3 {
-      font-size: 7.5pt; font-weight: 700; color: var(--accent);
-      margin: 0.2rem 0 0.07rem; break-after: avoid;
-    }
-    .fiche-section-content h4 {
-      font-size: 7pt; font-weight: 600; color: #555;
-      margin: 0.1rem 0 0.04rem;
-    }
-    .fiche-section-content p { margin: 0 0 0.09rem; }
+    .fiche-section-content h3 { font-size: 7.5pt; font-weight: 700; color: var(--accent); margin: 0.2rem 0 0.07rem; }
+    .fiche-section-content h4 { font-size: 7pt; font-weight: 600; color: #555; margin: 0.1rem 0 0.04rem; }
+    .fiche-section-content p  { margin: 0 0 0.09rem; }
     .fiche-section-content ul,
     .fiche-section-content ol { padding-left: 0.95rem; margin: 0.04rem 0 0.08rem; }
     .fiche-section-content li { margin-bottom: 0.03rem; }
     .fiche-section-content strong { font-weight: 700; }
-    .fiche-section-content em { font-style: italic; }
+    .fiche-section-content em    { font-style: italic; }
 
-    /* ── Blocs formule ────────────────────────────────────────── */
     .formula-block {
-      background: var(--accent-light);
-      border-left: 2.5pt solid var(--accent);
-      border-radius: 0 4px 4px 0;
-      padding: 0.16rem 0.5rem;
-      margin: 0.1rem 0;
-      break-inside: avoid;
+      background: var(--accent-light); border-left: 2.5pt solid var(--accent);
+      border-radius: 0 4px 4px 0; padding: 0.16rem 0.5rem; margin: 0.1rem 0;
     }
-
-    /* ── Boîtes ───────────────────────────────────────────────── */
     .definition-box {
       background: #EFF6FF; border-left: 2.5pt solid #3B82F6;
-      border-radius: 0 4px 4px 0; padding: 0.12rem 0.4rem; margin: 0.08rem 0; break-inside: avoid;
+      border-radius: 0 4px 4px 0; padding: 0.12rem 0.4rem; margin: 0.08rem 0;
     }
     .warning-box, .alert-info {
       background: #FFFBEB; border-left: 2.5pt solid #F59E0B;
-      border-radius: 0 4px 4px 0; padding: 0.12rem 0.4rem; margin: 0.08rem 0; break-inside: avoid;
+      border-radius: 0 4px 4px 0; padding: 0.12rem 0.4rem; margin: 0.08rem 0;
     }
     .tip-box {
       background: #F0FDF4; border-left: 2.5pt solid #22C55E;
-      border-radius: 0 4px 4px 0; padding: 0.12rem 0.4rem; margin: 0.08rem 0; break-inside: avoid;
+      border-radius: 0 4px 4px 0; padding: 0.12rem 0.4rem; margin: 0.08rem 0;
     }
 
-    /* ── Tableaux ─────────────────────────────────────────────── */
     .fiche-section-content table {
-      width: 100%; border-collapse: collapse;
-      font-size: 7pt; margin: 0.1rem 0; break-inside: avoid;
+      width: 100%; border-collapse: collapse; font-size: 7pt; margin: 0.1rem 0;
     }
     .fiche-section-content th {
       background: var(--accent-mid); color: var(--badge-text);
       font-weight: 700; padding: 0.1rem 0.28rem; text-align: left;
     }
     .fiche-section-content td {
-      border: 0.5pt solid #E2E8F0; padding: 0.07rem 0.28rem; vertical-align: top;
+      border: 0.5pt solid #e2e8f0; padding: 0.07rem 0.28rem; vertical-align: top;
     }
     .fiche-section-content tr:nth-child(even) td { background: var(--accent-light); }
 
-    /* ── KaTeX ────────────────────────────────────────────────── */
     .katex { font-size: 0.95em; }
     .katex-display { margin: 0.15rem 0 !important; overflow: visible; }
 
-    /* ── Saut de page (batch) ─────────────────────────────────── */
-    .page-break { break-before: page; }
-
-    /* ── Impression ───────────────────────────────────────────── */
-    @media print {
-      @page { size: A4 landscape; margin: 1.2cm; }
-      html { background: white; }
-      .toolbar { display: none !important; }
-      .page {
-        max-width: 14.8cm;
-        margin: 0 auto;
-        padding: 0;
-        box-shadow: none;
-        min-height: 0;
-      }
-    }
+    /* ── Pas d'@media print du tout : html2pdf génère le PDF ── */
   </style>
 </head>
 <body>
+
   <div class="toolbar">
-    <button class="btn-primary" onclick="window.print()">⎙ Imprimer / PDF</button>
+    <button id="btn-pdf" class="btn-primary">⬇ Télécharger le PDF</button>
     <button onclick="window.close()">✕ Fermer</button>
-    <span class="hint" id="hint"></span>
+    <span class="hint" id="hint">Génération du PDF directe — aucune boîte de dialogue.</span>
   </div>
 
-  <div class="page">
-    <div id="content" style="color:#94a3b8;font-size:11px">Chargement…</div>
+  <div class="preview">
+    <div id="content" style="color:#94a3b8;font-size:12px">Chargement…</div>
   </div>
 
+  <!-- KaTeX -->
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <!-- html2pdf : génère le PDF côté client sans dialogue navigateur -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
+          integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnQ=="
+          crossorigin="anonymous"></script>
+
   <script>
-    (function () {
-      var ua = navigator.userAgent;
-      var isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
-      var isSafari = !isMobile && /^((?!chrome|android).)*safari/i.test(ua);
-      var hint = document.getElementById('hint');
-      if (isMobile) {
-        hint.textContent = 'iPhone : Imprimer → maintenir l’aperçu → Partager → « Enregistrer dans Fichiers »';
-      } else if (isSafari) {
-        hint.innerHTML = 'Format déjà en <strong>A4 paysage</strong> — ne pas le changer. Cocher <strong>« Imprimer les fonds »</strong> puis cliquer directement sur <strong>Enregistrer en PDF</strong>.';
-      } else {
-        hint.innerHTML = 'Format déjà en <strong>A4 paysage</strong>. Choisir « Enregistrer en PDF » et cliquer Enregistrer.';
-      }
+  (function () {
+    /* ── Charger la fiche depuis localStorage ── */
+    var key = location.hash.slice(1);
+    var el  = document.getElementById('content');
 
-      var key = location.hash.slice(1);
-      if (!key) return;
+    if (!key) { el.textContent = 'Aucune fiche à afficher.'; return; }
 
-      var raw = localStorage.getItem(key);
-      if (!raw) { document.getElementById('content').textContent = 'Données introuvables.'; return; }
-      localStorage.removeItem(key);
+    var raw = localStorage.getItem(key);
+    if (!raw) { el.textContent = 'Données introuvables — revenez sur la fiche et réessayez.'; return; }
+    localStorage.removeItem(key);
 
-      var data = JSON.parse(raw);
-      document.title = data.title || 'Fiche';
+    var data = JSON.parse(raw);
+    document.title = data.title || 'Fiche';
 
-      var el = document.getElementById('content');
-      el.innerHTML = data.html;
+    el.removeAttribute('style');
+    el.innerHTML = data.html;
 
-      try {
-        renderMathInElement(el, {
-          delimiters: [
-            { left: '$$',   right: '$$',   display: true  },
-            { left: '\\[',  right: '\\]',  display: true  },
-            { left: '$',    right: '$',    display: false },
-            { left: '\\(',  right: '\\)',  display: false }
-          ],
-          throwOnError: false
+    /* ── Rendu KaTeX ── */
+    try {
+      renderMathInElement(el, {
+        delimiters: [
+          { left: '$$',  right: '$$',  display: true  },
+          { left: '\\[', right: '\\]', display: true  },
+          { left: '$',   right: '$',   display: false },
+          { left: '\\(', right: '\\)', display: false }
+        ],
+        throwOnError: false
+      });
+    } catch (e) { console.warn('KaTeX:', e); }
+
+    /* ── Indice selon la matière ── */
+    var subjectClass = (el.querySelector('[class*="subject-"]') || el.firstElementChild || {}).className || '';
+    var matiere = subjectClass.indexOf('subject-ee') !== -1    ? 'EE (vert)'
+                : subjectClass.indexOf('subject-pc') !== -1    ? 'PC (violet)'
+                : subjectClass.indexOf('subject-maths') !== -1 ? 'Maths (orange)'
+                : '';
+    var hint = document.getElementById('hint');
+    hint.textContent = matiere
+      ? 'Fiche ' + matiere + ' — cliquer sur « Télécharger le PDF » pour enregistrer en A5.'
+      : 'Cliquer sur « Télécharger le PDF » pour enregistrer en A5.';
+
+    /* ── Générer le PDF via html2pdf (sans dialogue Safari) ── */
+    document.getElementById('btn-pdf').addEventListener('click', function () {
+      var btn = this;
+      btn.textContent = 'Génération…';
+      btn.disabled = true;
+
+      var filename = (data.title || 'fiche').replace(/[\\/:*?"<>|]/g, '-') + '.pdf';
+
+      html2pdf()
+        .set({
+          margin:      [1.2, 1.2, 1.2, 1.2],  /* cm : haut, gauche, bas, droite */
+          filename:    filename,
+          image:       { type: 'jpeg', quality: 0.97 },
+          html2canvas: {
+            scale:    2,
+            useCORS:  true,
+            logging:  false,
+            /* forcer la largeur desktop pour une capture cohérente */
+            windowWidth: 1200
+          },
+          jsPDF: { unit: 'cm', format: 'a5', orientation: 'portrait' }
+        })
+        .from(el)
+        .save()
+        .then(function () {
+          btn.textContent = '⬇ Télécharger le PDF';
+          btn.disabled = false;
+        })
+        .catch(function (err) {
+          console.error('html2pdf error:', err);
+          btn.textContent = '⬇ Télécharger le PDF';
+          btn.disabled = false;
+          alert('Erreur lors de la génération du PDF : ' + err.message);
         });
-      } catch (e) { console.warn('KaTeX:', e); }
-    })();
+    });
+  })();
   </script>
+
 </body>
 </html>
