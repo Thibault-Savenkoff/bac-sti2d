@@ -198,28 +198,41 @@
 
       var filename = (data.title || 'fiche').replace(/[\\/:*?"<>|]/g, '-') + '.pdf';
 
+      /* Capturer .preview (padding 1.2cm déjà inclus → margin: 0 dans jsPDF) */
+      var preview = document.querySelector('.preview');
+      preview.style.minHeight  = '0';
+      preview.style.boxShadow  = 'none';
+
+      function restorePreview() {
+        preview.style.minHeight = '';
+        preview.style.boxShadow = '';
+      }
+
       try {
         html2pdf()
           .set({
-            margin:      [1.2, 1.2, 1.2, 1.2],
+            margin:      0,
             filename:    filename,
-            image:       { type: 'jpeg', quality: 0.97 },
-            html2canvas: { scale: 2, useCORS: true, logging: false, windowWidth: 1200 },
+            image:       { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 3, useCORS: true, logging: false },
             jsPDF:       { unit: 'cm', format: 'a5', orientation: 'portrait' }
           })
-          .from(el)
+          .from(preview)
           .save()
           .then(function () {
+            restorePreview();
             btn.textContent = '⬇ Télécharger le PDF';
             btn.disabled = false;
           })
           .catch(function (err) {
+            restorePreview();
             console.error('html2pdf error:', err);
             btn.textContent = '⬇ Télécharger le PDF';
             btn.disabled = false;
             alert('Erreur lors de la génération du PDF : ' + (err.message || err));
           });
       } catch (err) {
+        restorePreview();
         console.error('html2pdf sync error:', err);
         btn.textContent = '⬇ Télécharger le PDF';
         btn.disabled = false;
