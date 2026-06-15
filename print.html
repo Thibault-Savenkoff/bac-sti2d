@@ -127,6 +127,7 @@
 
   <div class="toolbar">
     <button id="btn-pdf" class="btn-primary">⬇ Télécharger le PDF</button>
+    <button onclick="window.print()">⎙ Imprimer</button>
     <button onclick="window.close()">✕ Fermer</button>
     <span class="hint" id="hint">Génération du PDF directe — aucune boîte de dialogue.</span>
   </div>
@@ -139,9 +140,7 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
   <!-- html2pdf : génère le PDF côté client sans dialogue navigateur -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
-          integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnQ=="
-          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <script>
   (function () {
@@ -188,37 +187,44 @@
     /* ── Générer le PDF via html2pdf (sans dialogue Safari) ── */
     document.getElementById('btn-pdf').addEventListener('click', function () {
       var btn = this;
+
+      if (typeof html2pdf === 'undefined') {
+        alert('La bibliothèque PDF n\'a pas pu se charger. Vérifie ta connexion et recharge la page.');
+        return;
+      }
+
       btn.textContent = 'Génération…';
       btn.disabled = true;
 
       var filename = (data.title || 'fiche').replace(/[\\/:*?"<>|]/g, '-') + '.pdf';
 
-      html2pdf()
-        .set({
-          margin:      [1.2, 1.2, 1.2, 1.2],  /* cm : haut, gauche, bas, droite */
-          filename:    filename,
-          image:       { type: 'jpeg', quality: 0.97 },
-          html2canvas: {
-            scale:    2,
-            useCORS:  true,
-            logging:  false,
-            /* forcer la largeur desktop pour une capture cohérente */
-            windowWidth: 1200
-          },
-          jsPDF: { unit: 'cm', format: 'a5', orientation: 'portrait' }
-        })
-        .from(el)
-        .save()
-        .then(function () {
-          btn.textContent = '⬇ Télécharger le PDF';
-          btn.disabled = false;
-        })
-        .catch(function (err) {
-          console.error('html2pdf error:', err);
-          btn.textContent = '⬇ Télécharger le PDF';
-          btn.disabled = false;
-          alert('Erreur lors de la génération du PDF : ' + err.message);
-        });
+      try {
+        html2pdf()
+          .set({
+            margin:      [1.2, 1.2, 1.2, 1.2],
+            filename:    filename,
+            image:       { type: 'jpeg', quality: 0.97 },
+            html2canvas: { scale: 2, useCORS: true, logging: false, windowWidth: 1200 },
+            jsPDF:       { unit: 'cm', format: 'a5', orientation: 'portrait' }
+          })
+          .from(el)
+          .save()
+          .then(function () {
+            btn.textContent = '⬇ Télécharger le PDF';
+            btn.disabled = false;
+          })
+          .catch(function (err) {
+            console.error('html2pdf error:', err);
+            btn.textContent = '⬇ Télécharger le PDF';
+            btn.disabled = false;
+            alert('Erreur lors de la génération du PDF : ' + (err.message || err));
+          });
+      } catch (err) {
+        console.error('html2pdf sync error:', err);
+        btn.textContent = '⬇ Télécharger le PDF';
+        btn.disabled = false;
+        alert('Erreur : ' + (err.message || err));
+      }
     });
   })();
   </script>
