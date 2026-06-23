@@ -7,6 +7,7 @@ import { renderQuiz } from './pages/quiz.js';
 import { renderFormules } from './pages/formules.js';
 import { renderAnnales } from './pages/annales.js';
 import { renderImprimer } from './pages/imprimer.js';
+import { renderGrandOral } from './pages/grand-oral.js';
 import { getAllDueCount } from './store.js';
 
 // Load all cards for dashboard due-count badge
@@ -103,6 +104,11 @@ registerRoute('imprimer', async () => {
 registerRoute('imprimer/:subjectId', async ({ subjectId }) => {
   await refreshNav();
   await renderImprimer(subjectId);
+});
+
+registerRoute('grand-oral', async () => {
+  await refreshNav();
+  renderGrandOral();
 });
 
 initRouter();

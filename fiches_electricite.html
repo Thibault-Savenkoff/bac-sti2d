@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Grand Oral Électricité">
+<title>Grand Oral — Répartition de l'électricité en France</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --purple:#534AB7; --purple-bg:#EEEDFE; --purple-text:#3C3489;
+    --teal:#1D9E75;   --teal-bg:#E1F5EE;   --teal-text:#085041;
+    --blue:#378ADD;   --blue-bg:#E6F1FB;   --blue-text:#0C447C;
+    --amber:#EF9F27;  --amber-bg:#FAEEDA;  --amber-text:#633806;
+    --red:#E24B4A;    --red-bg:#FCEBEB;    --red-text:#791F1F;
+    --gray:#888780;   --gray-bg:#F1EFE8;   --gray-text:#444441;
+    --border:#E5E4E0; --text:#1a1a1a; --text-sec:#666; --text-ter:#999;
+    --bg:#ffffff; --bg-sec:#F7F6F3;
+    /* spacing tokens — remplacés en paysage */
+    --pad: 16px;
+    --gap: 16px;
+    --header-pad: 18px 18px 14px;
+    --body-pad: 14px 18px 18px;
+    --num-size: 40px;
+    --num-font: 17px;
+    --title-font: 17px;
+    --sub-font: 12px;
+    --li-font: 14px;
+    --card-val-font: 20px;
+    --card-label-font: 11px;
+    --tip-font: 13px;
+    --tension-font: 12.5px;
+    --tension-badge-font: 12px;
+    --q-q-font: 15px;
+    --q-a-font: 13px;
+    --section-font: 10px;
+  }
+
+  /* ── Paysage (phone en horizontal) ── */
+  @media (max-height: 520px) {
+    :root {
+      --pad: 10px;
+      --gap: 10px;
+      --header-pad: 10px 14px 8px;
+      --body-pad: 10px 14px 12px;
+      --num-size: 32px;
+      --num-font: 14px;
+      --title-font: 15px;
+      --sub-font: 11px;
+      --li-font: 13px;
+      --card-val-font: 16px;
+      --card-label-font: 10px;
+      --tip-font: 12px;
+      --tension-font: 11.5px;
+      --tension-badge-font: 11px;
+      --q-q-font: 13px;
+      --q-a-font: 12px;
+      --section-font: 9px;
+    }
+    .top-title { display: none; }
+    .nav-scroll { padding-bottom: 8px; }
+    .top-bar { padding: 8px 12px 0; }
+    .progress { padding: 8px 0 2px; }
+    .fiche-body { gap: var(--gap); }
+  }
+
+  /* ── Très petits écrans portrait (≤ 360px) ── */
+  @media (max-width: 360px) {
+    :root {
+      --pad: 12px;
+      --gap: 12px;
+      --card-val-font: 17px;
+      --title-font: 15px;
+      --li-font: 13px;
+    }
+    .cards { grid-template-columns: 1fr; }
+    .tension-row { flex-wrap: wrap; }
+  }
+
+  /* ── Tablette / desktop (≥ 600px) ── */
+  @media (min-width: 600px) {
+    :root {
+      --pad: 20px;
+      --gap: 20px;
+      --card-val-font: 22px;
+      --title-font: 19px;
+      --li-font: 15px;
+      --q-q-font: 16px;
+      --q-a-font: 14px;
+    }
+    .fiche { max-width: 680px; margin: 0 auto; }
+    .cards { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  body {
+    font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
+    background:#F2F1EE; color:var(--text); min-height:100vh;
+    padding-bottom:env(safe-area-inset-bottom); overflow-x:hidden;
+  }
+  .top-bar {
+    position:sticky; top:0; z-index:100;
+    background:rgba(242,241,238,0.92);
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    padding:12px 16px 0; border-bottom:0.5px solid var(--border);
+  }
+  .top-title { font-size:11px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; color:var(--text-ter); margin-bottom:10px; }
+  .nav-scroll { display:flex; gap:8px; overflow-x:auto; padding-bottom:12px; scrollbar-width:none; }
+  .nav-scroll::-webkit-scrollbar { display:none; }
+  .nav-btn {
+    flex-shrink:0; padding:8px 14px; border-radius:20px;
+    border:1px solid var(--border); background:white;
+    font-size:13px; font-weight:500; color:var(--text-sec);
+    cursor:pointer; transition:all 0.15s; white-space:nowrap;
+  }
+  .nav-btn.active { color:white; border-color:transparent; }
+
+  .fiche { display:none; padding:var(--pad); }
+  .fiche.active { display:block; }
+  @keyframes slideInRight { from{opacity:0;transform:translateX(32px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes slideInLeft  { from{opacity:0;transform:translateX(-32px)} to{opacity:1;transform:translateX(0)} }
+  .fiche.anim-right { animation:slideInRight 0.28s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .fiche.anim-left  { animation:slideInLeft  0.28s cubic-bezier(0.25,0.46,0.45,0.94); }
+
+  .fiche-card { background:white; border-radius:16px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+  .fiche-header { padding:var(--header-pad); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .fiche-num { width:var(--num-size); height:var(--num-size); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:var(--num-font); font-weight:700; flex-shrink:0; }
+  .fiche-title { font-size:var(--title-font); font-weight:700; line-height:1.2; }
+  .fiche-subtitle { font-size:var(--sub-font); color:var(--text-sec); margin-top:2px; }
+  .fiche-body { padding:var(--body-pad); display:flex; flex-direction:column; gap:var(--gap); }
+
+  .section-label { font-size:var(--section-font); font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-ter); margin-bottom:8px; }
+
+  ul.pts { list-style:none; border-top:0.5px solid var(--border); }
+  ul.pts li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 9px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: var(--li-font);
+    line-height: 1.5;
+  }
+  ul.pts li:last-child { border-bottom:none; }
+  .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:6px; }
+  .li-text { flex:1; min-width:0; word-break:break-word; }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .card { background:var(--bg-sec); border-radius:10px; padding:10px 12px; border:0.5px solid var(--border); min-width:0; }
+  .card-label { font-size:var(--card-label-font); color:var(--text-sec); margin-bottom:3px; line-height:1.3; }
+  .card-val { font-size:var(--card-val-font); font-weight:700; line-height:1.1; word-break:break-word; }
+  .card-ctx { font-size:10px; color:var(--text-ter); margin-top:3px; }
+
+  .tip,.warn { border-radius:0 10px 10px 0; padding:10px 14px; font-size:var(--tip-font); line-height:1.5; }
+  .tip  { background:#EBF4FF; border-left:3px solid var(--blue);  color:var(--blue-text); }
+  .warn { background:#FFF8EC; border-left:3px solid var(--amber); color:var(--amber-text); }
+
+  /* tension box */
+  .tension-box { background:var(--bg-sec); border-radius:12px; padding:12px 14px; border:0.5px solid var(--border); }
+  .tension-row { display:flex; align-items:flex-start; gap:10px; padding:7px 0; border-bottom:0.5px solid var(--border); }
+  .tension-row:last-child { border-bottom:none; }
+  .tension-badge { font-size:var(--tension-badge-font); font-weight:700; padding:3px 9px; border-radius:20px; white-space:nowrap; flex-shrink:0; margin-top:2px; }
+  .tension-desc { font-size:var(--tension-font); color:var(--text-sec); line-height:1.4; min-width:0; }
+
+  /* mix bar */
+  .mix-bar { border-radius:8px; overflow:hidden; display:flex; height:16px; margin-bottom:8px; }
+  .mix-bar-seg { height:100%; }
+  .mix-legend { display:flex; flex-wrap:wrap; gap:6px 10px; }
+  .mix-legend-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-sec); white-space:nowrap; }
+  .mix-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+  /* q&a */
+  .q-item { background:var(--bg-sec); border-radius:10px; padding:11px 13px; border:0.5px solid var(--border); }
+  .q-tag { font-size:10px; color:var(--text-ter); margin-bottom:3px; }
+  .q-q { font-size:var(--q-q-font); font-weight:700; margin-bottom:5px; line-height:1.3; }
+  .q-a { font-size:var(--q-a-font); color:#444; line-height:1.5; }
+  .q-list { display:flex; flex-direction:column; gap:8px; }
+
+  .progress { display:flex; justify-content:center; gap:6px; padding:12px 0 4px; }
+  .prog-dot { width:6px; height:6px; border-radius:50%; background:var(--border); transition:all 0.2s; }
+  .prog-dot.active { width:18px; border-radius:3px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-title">Grand Oral — Répartition de l'électricité en France</div>
+  <div class="nav-scroll">
+    <button class="nav-btn active" onclick="show(0)">0 · Intro</button>
+    <button class="nav-btn" onclick="show(1)">1 · Production</button>
+    <button class="nav-btn" onclick="show(2)">2 · Transport</button>
+    <button class="nav-btn" onclick="show(3)">3 · Répartition technique</button>
+    <button class="nav-btn" onclick="show(4)">4 · Conclusion</button>
+    <button class="nav-btn" onclick="show(5)">5 · Questions</button>
+  </div>
+</div>
+
+<!-- FICHE 0 : INTRO -->
+<div class="fiche active" id="f0">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--purple-bg);color:var(--purple-text);">0</div>
+      <div>
+        <div class="fiche-title" style="color:var(--purple-text);">Introduction</div>
+        <div class="fiche-subtitle">Accroche · Contexte · Plan · ~1 min 30</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div>
+        <div class="section-label">Accroche — 2 chiffres forts</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--purple);"></span><span class="li-text">La France produit <strong>~536,5 TWh d'électricité par an</strong> (2023, RTE) — l'un des mix les plus décarbonés d'Europe à <strong>~92 % bas carbone</strong>.</span></li>
+          <li><span class="dot" style="background:var(--purple);"></span><span class="li-text">La France est devenue en 2024 <strong>exportatrice nette record</strong> : +89 TWh exportés (record historique), valorisés à 5 milliards €. Un contraste saisissant avec 2022 où elle était importatrice nette pour la première fois en 40 ans.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Définir "répartir"</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text">Répartir = <strong>produire</strong> au bon endroit + <strong>transporter</strong> jusqu'aux usages + <strong>équilibrer</strong> l'offre et la demande en temps réel.</span></li>
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text">L'électricité ne se stocke pas facilement → équilibre permanent entre production et consommation, seconde par seconde.</span></li>
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text">Enjeu croissant : l'électrification des usages (VE, pompes à chaleur) va augmenter la demande de <strong>30 à 40 %</strong> d'ici 2050. (RTE, Futurs Énergétiques)</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Plan</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--teal);"></span><span class="li-text"><strong>Axe 1</strong> — La production : d'où vient l'électricité française ?</span></li>
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text"><strong>Axe 2</strong> — Le transport et la distribution : acteurs, réseaux, équilibre.</span></li>
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text"><strong>Axe 3</strong> — La répartition technique : loi des nœuds, réseau maillé, bilan de puissance.</span></li>
+        </ul>
+      </div>
+      <div class="tip">💡 Lien EE : la répartition de l'électricité est un cas concret de tout ce qu'on étudie — bilan puissance, pertes en ligne, rendement des transformateurs, gestion de l'énergie.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHE 1 : PRODUCTION -->
+<div class="fiche" id="f1">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--teal-bg);color:var(--teal-text);">1</div>
+      <div>
+        <div class="fiche-title" style="color:var(--teal-text);">Axe 1 — La production</div>
+        <div class="fiche-subtitle">Mix électrique · Atouts · Limites · ~2 min 30</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div class="cards">
+        <div class="card"><div class="card-label">Production totale (2023)</div><div class="card-val" style="color:var(--teal-text);">536,5 TWh</div><div class="card-ctx">RTE, bilan 2024</div></div>
+        <div class="card"><div class="card-label">Part bas carbone</div><div class="card-val" style="color:var(--teal-text);">~92 %</div><div class="card-ctx">Nucléaire + EnR, production nationale (RTE 2023)</div></div>
+        <div class="card"><div class="card-label">Nucléaire (2023)</div><div class="card-val" style="color:var(--teal-text);">67,4 %</div><div class="card-ctx">57 réacteurs, 18 centrales (dont EPR Flamanville, déc. 2024)</div></div>
+        <div class="card"><div class="card-label">EnR électrique</div><div class="card-val" style="color:var(--teal-text);">27,6 %</div><div class="card-ctx">Hydro 13,9%, Éolien ~10%, Solaire ~5%</div></div>
+      </div>
+      <div>
+        <div class="section-label">Mix électrique 2023</div>
+        <div class="mix-bar">
+          <div class="mix-bar-seg" style="width:67%;background:#3B6FCA;"></div>
+          <div class="mix-bar-seg" style="width:14%;background:#1D9E75;"></div>
+          <div class="mix-bar-seg" style="width:10%;background:#6BBDE3;"></div>
+          <div class="mix-bar-seg" style="width:5%;background:#F5C842;"></div>
+          <div class="mix-bar-seg" style="width:2%;background:#8BC34A;"></div>
+          <div class="mix-bar-seg" style="width:4%;background:#E24B4A;"></div>
+        </div>
+        <div class="mix-legend">
+          <div class="mix-legend-item"><div class="mix-dot" style="background:#3B6FCA;"></div>Nucléaire 67,4%</div>
+          <div class="mix-legend-item"><div class="mix-dot" style="background:#1D9E75;"></div>Hydraulique 13,9%</div>
+          <div class="mix-legend-item"><div class="mix-dot" style="background:#6BBDE3;"></div>Éolien 10%</div>
+          <div class="mix-legend-item"><div class="mix-dot" style="background:#F5C842;"></div>Solaire 5%</div>
+          <div class="mix-legend-item"><div class="mix-dot" style="background:#8BC34A;"></div>Biomasse 2%</div>
+          <div class="mix-legend-item"><div class="mix-dot" style="background:#E24B4A;"></div>Fossile ~3,7%</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Atouts &amp; limites de chaque filière</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:#3B6FCA;"></span><span class="li-text"><strong>Nucléaire :</strong> base stable, faible CO₂ (~6 gCO₂/kWh). Retour en force en 2024 : 361,7 TWh + EPR de Flamanville couplé au réseau le 21 décembre 2024. Limite : maintenance, besoin d'eau (canicule).</span></li>
+          <li><span class="dot" style="background:#1D9E75;"></span><span class="li-text"><strong>Hydraulique :</strong> seule EnR <strong>pilotable</strong> à grande échelle — on ouvre ou ferme les vannes selon la demande. Limite : dépend de la pluviométrie (2022 = sécheresse historique).</span></li>
+          <li><span class="dot" style="background:#6BBDE3;"></span><span class="li-text"><strong>Éolien/Solaire :</strong> en forte croissance, records 2023. Limite : <strong>intermittence</strong> — production non pilotable, dépend de la météo → défi pour l'équilibre du réseau.</span></li>
+        </ul>
+      </div>
+      <div class="warn">⚠️ La crise 2022 puis le rebond 2024 : en 2022, ~50 % du parc nucléaire à l'arrêt + sécheresse → France importatrice nette (1ère fois en 40 ans). En 2024, retour en force : 361,7 TWh nucléaires + hydraulique record (74,7 TWh) → exportatrice record. Illustration de la dépendance au nucléaire.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHE 2 : TRANSPORT & DISTRIBUTION -->
+<div class="fiche" id="f2">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--blue-bg);color:var(--blue-text);">2</div>
+      <div>
+        <div class="fiche-title" style="color:var(--blue-text);">Axe 2 — Transport &amp; Distribution</div>
+        <div class="fiche-subtitle">Niveaux de tension · Acteurs · Équilibre · ~2 min 30</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div>
+        <div class="section-label">Les niveaux de tension — du producteur au foyer</div>
+        <div class="tension-box">
+          <div class="tension-row">
+            <span class="tension-badge" style="background:#EEEDFE;color:#3C3489;">400 / 225 kV</span>
+            <span class="tension-desc"><strong>Très Haute Tension (THT)</strong> — transport longue distance. Géré par <strong>RTE</strong> (106 000 km de lignes).</span>
+          </div>
+          <div class="tension-row">
+            <span class="tension-badge" style="background:#E6F1FB;color:#0C447C;">63 / 90 kV</span>
+            <span class="tension-desc"><strong>Haute Tension (HT)</strong> — transport régional. Toujours RTE. Alimentent les grandes industries et les postes sources.</span>
+          </div>
+          <div class="tension-row">
+            <span class="tension-badge" style="background:#FAEEDA;color:#633806;">20 kV</span>
+            <span class="tension-desc"><strong>Haute Tension A (HTA)</strong> — distribution. Géré par <strong>Enedis</strong> (~730 000 km de lignes). Alimente les quartiers, PME.</span>
+          </div>
+          <div class="tension-row">
+            <span class="tension-badge" style="background:#E1F5EE;color:#085041;">230 / 400 V</span>
+            <span class="tension-desc"><strong>Basse Tension (BT)</strong> — usage domestique et petits commerces. Enedis. Tension prise standard : 230 V.</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Les acteurs clés</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text"><strong>RTE</strong> (Réseau de Transport d'Électricité) : gère le réseau haute tension, surveille l'équilibre offre/demande en temps réel, gère les interconnexions avec les voisins (50+ lignes).</span></li>
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text"><strong>Enedis</strong> : gestionnaire du réseau de distribution (ex-ERDF). Déploie les compteurs <strong>Linky</strong> (~35 millions installés) qui permettent le pilotage fin de la consommation.</span></li>
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text"><strong>CRE</strong> (Commission de Régulation de l'Énergie) : régule le marché, fixe les tarifs d'accès au réseau (TURPE). <strong>ADEME</strong> : finance et accompagne la transition.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">L'équilibre temps réel — concept clé</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text">Le réseau fonctionne en <strong>courant alternatif à 50 Hz</strong>. Si la production dépasse la conso → fréquence monte. Déficit → fréquence descend. RTE doit maintenir 50 Hz ± 0,2 Hz en permanence.</span></li>
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text"><strong>Pertes en ligne :</strong> ~2,5 % sur le réseau transport (THT), ~5 % sur l'ensemble du réseau (transport + distribution). Liées à l'effet Joule dans les câbles → raison pour laquelle on transporte à très haute tension.</span></li>
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text"><strong>Interconnexions :</strong> la France est reliée à 7 pays voisins. Filet de sécurité en cas de déséquilibre, et source de revenus à l'export quand le nucléaire tourne à plein.</span></li>
+        </ul>
+      </div>
+      <div class="tip">💡 EE : la haute tension pour le transport = minimiser les pertes Joule (P = R·I²). Abaisser I en montant U → même puissance, moins de pertes. C'est exactement le rôle des transformateurs.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHE 3 : RÉPARTITION TECHNIQUE -->
+<div class="fiche" id="f3">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--amber-bg);color:var(--amber-text);">3</div>
+      <div>
+        <div class="fiche-title" style="color:var(--amber-text);">Axe 3 — La répartition technique</div>
+        <div class="fiche-subtitle">Loi des nœuds · Maillé vs radial · Bilan · ~2 min</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div class="cards">
+        <div class="card"><div class="card-label">Pertes totales réseau</div><div class="card-val" style="color:var(--amber-text);">~5 %</div><div class="card-ctx">Transport ~2,5 % + Distribution ~2,5 %</div></div>
+        <div class="card"><div class="card-label">Résistivité alu (lignes HT)</div><div class="card-val" style="color:var(--amber-text);">2,7×10⁻⁸</div><div class="card-ctx">Ω·m — léger, utilisé en aérien</div></div>
+        <div class="card"><div class="card-label">Formule résistance ligne</div><div class="card-val" style="color:var(--amber-text);">R = ρ·L/S</div><div class="card-ctx">ρ résistivité, L longueur, S section</div></div>
+        <div class="card"><div class="card-label">Nœuds réseau RTE</div><div class="card-val" style="color:var(--amber-text);">~6 000</div><div class="card-ctx">Surveillés en temps réel (dispatching)</div></div>
+      </div>
+      <div>
+        <div class="section-label">Loi des nœuds — principe de base</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text">À chaque poste de transformation (nœud) : <strong>ΣI_entrées = ΣI_sorties</strong>. Conservation de la charge électrique — rien ne se perd, rien ne se crée.</span></li>
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text">Exemple : un poste 225 kV reçoit 300 A (ligne A) + 200 A (ligne B) → redistribue exactement 500 A vers les départs aval. RTE surveille ce bilan sur ~6 000 nœuds en temps réel au dispatching national (Saint-Denis).</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Réseau maillé vs radial → répartition automatique</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text"><strong>Transport RTE = maillé :</strong> plusieurs chemins possibles entre deux points. Le courant se distribue automatiquement selon R = ρ·L/S de chaque ligne — les lignes courtes à grande section conduisent davantage.</span></li>
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text"><strong>Distribution Enedis = radial :</strong> un seul chemin par départ — plus simple à gérer, mais moins robuste (panne = coupure totale du départ).</span></li>
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text"><strong>Diviseur de courant :</strong> deux lignes en parallèle → I₁/I₂ = R₂/R₁ (loi des mailles). Le courant emprunte préférentiellement le chemin de moindre résistance.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Effet Joule &amp; bilan de puissance national</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text"><strong>P_pertes = R·I²</strong> sur chaque ligne. Bilan national : <strong>P_produite = P_consommée + P_pertes</strong> (~5 % du total perdus en chaleur dans les câbles).</span></li>
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text">Objectif RTE : calculer la répartition qui <strong>minimise ΣR·I²</strong> sur l'ensemble du réseau — problème d'optimisation résolu numériquement en temps réel par le dispatching.</span></li>
+        </ul>
+      </div>
+      <div class="tip">💡 EE direct : loi des nœuds, loi des mailles, diviseur de courant, effet Joule — tout ce que tu calcules sur des circuits en cours, RTE le fait sur 6 000 nœuds en temps réel.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHE 4 : CONCLUSION -->
+<div class="fiche" id="f4">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--red-bg);color:var(--red-text);">4</div>
+      <div>
+        <div class="fiche-title" style="color:var(--red-text);">Conclusion</div>
+        <div class="fiche-subtitle">Bilan · Tensions · Ouverture · ~1 min</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div>
+        <div class="section-label">Répondre à la problématique</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--red);"></span><span class="li-text"><strong>Production :</strong> mix décarbonné à 92 % — atout majeur, mais vulnérable (dépendance au nucléaire, intermittence des EnR).</span></li>
+          <li><span class="dot" style="background:var(--red);"></span><span class="li-text"><strong>Transport/distribution :</strong> infrastructure robuste (RTE + Enedis), mais vieillissante et sous-investie face aux nouveaux usages.</span></li>
+          <li><span class="dot" style="background:var(--red);"></span><span class="li-text"><strong>Répartition technique :</strong> la loi des nœuds et l'effet Joule gouvernent physiquement la distribution — RTE optimise ces flux sur ~6 000 nœuds en temps réel.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">La tension centrale</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text">La France doit <strong>produire plus</strong> (EnR + nouveau nucléaire) tout en <strong>consommant mieux</strong> (sobriété, flexibilité) pour réussir la transition électrique.</span></li>
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text">La répartition de l'électricité n'est plus seulement un problème technique : c'est un <strong>enjeu stratégique national</strong> — souveraineté énergétique, décarbonation, compétitivité industrielle.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Ouverture</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text">Nouveau nucléaire (6 EPR2 annoncés par Macron en 2022). Objectif 100 GW d'EnR d'ici 2035. Renforcement du réseau de distribution pour accueillir l'injection locale des panneaux solaires et des VE.</span></li>
+        </ul>
+      </div>
+      <div class="tip">🎯 <strong>Phrase de fin :</strong> "Répartir l'électricité en France, c'est arbitrer en permanence entre disponibilité, décarbonation et coût — un équilibre de plus en plus complexe à l'heure de l'électrification de tout."</div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHE 5 : QUESTIONS -->
+<div class="fiche" id="f5">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--gray-bg);color:var(--gray-text);">5</div>
+      <div>
+        <div class="fiche-title" style="color:var(--gray-text);">Questions probables du jury</div>
+        <div class="fiche-subtitle">10 min de Q&amp;A — 9 questions</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div class="q-list">
+        <div class="q-item">
+          <div class="q-tag">EE — concept fondamental</div>
+          <div class="q-q">Pourquoi transporte-t-on l'électricité à très haute tension ?</div>
+          <div class="q-a">Pour minimiser les pertes par effet Joule : P_pertes = R·I². En montant la tension (ex. 400 kV), on diminue l'intensité à puissance transmise égale (P = U·I), donc les pertes chutent drastiquement. C'est le rôle des transformateurs élévateurs en sortie de centrale et abaisseurs en arrivée chez le consommateur.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">EE — concept fondamental</div>
+          <div class="q-q">Qu'est-ce que la fréquence 50 Hz et pourquoi est-ce critique ?</div>
+          <div class="q-a">Le réseau français fonctionne en courant alternatif à 50 Hz. Cette fréquence est le reflet direct de l'équilibre entre production et consommation : trop de production → fréquence monte, déficit → elle descend. RTE doit maintenir 50 Hz ± 0,2 Hz en permanence. En cas de déviation trop forte, les centrales se déconnectent automatiquement pour se protéger → risque de blackout en cascade.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Acteurs</div>
+          <div class="q-q">Quelle est la différence entre RTE et Enedis ?</div>
+          <div class="q-a">RTE gère le réseau de transport à haute et très haute tension (63 à 400 kV, 106 000 km) — c'est l'"autoroute" de l'électricité. Enedis gère la distribution (20 kV → 230 V, ~730 000 km) — ce sont les "routes départementales et communales". RTE est filiale d'EDF, Enedis aussi. Les deux sont des gestionnaires de réseau : ils n'achètent ni ne vendent d'électricité, ils assurent le transit.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Stockage</div>
+          <div class="q-q">C'est quoi une STEP et pourquoi est-ce important ?</div>
+          <div class="q-a">Station de Transfert d'Énergie par Pompage. Quand l'électricité est excédentaire (ex. nuit, vent fort), on pompe de l'eau d'un réservoir bas vers un réservoir haut. À la pointe de demande, on turbine : l'eau redescend et génère de l'électricité. La France dispose de ~5 GW de capacité, la plus grande d'Europe. Rendement ~80 %. C'est actuellement le seul moyen de stockage massif opérationnel en France.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Intermittence</div>
+          <div class="q-q">Comment gère-t-on l'intermittence des EnR ?</div>
+          <div class="q-a">Plusieurs leviers : 1) STEP pour stocker les surplus. 2) Interconnexions avec les voisins (importer/exporter selon les besoins). 3) Effacement de la demande (EcoWatt, heures creuses). 4) Centrales à gaz en "backup" rapide. 5) À terme : batteries de grande capacité, hydrogène, pilotage intelligent via smart grids.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Crise 2022</div>
+          <div class="q-q">Pourquoi la France a-t-elle été importatrice en 2022 ?</div>
+          <div class="q-a">Triple crise simultanée : 1) Nucléaire — découverte de la corrosion sous contrainte dans les circuits de refroidissement de nombreux réacteurs → ~50 % du parc à l'arrêt. 2) Hydraulique — sécheresse historique, baisse de la production. 3) Gaz — crise ukrainienne, prix explosifs. France a dû importer massivement, notamment d'Allemagne et d'Espagne. En 2023, la situation s'est normalisée.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Futur</div>
+          <div class="q-q">Quel impact auront les voitures électriques sur le réseau ?</div>
+          <div class="q-a">Si tous les VE français chargeaient au même moment, la puissance appelée pourrait dépasser 50 GW — soit presque autant que la consommation actuelle en soirée. La solution : la recharge pilotée (smart charging). Le compteur Linky d'Enedis permettra de décaler la charge en heure creuse ou lors des pics de production EnR, transformant les VE en actif de flexibilité du réseau plutôt qu'en charge supplémentaire.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Lien spécialité</div>
+          <div class="q-q">En quoi ce sujet se rattache directement à ta formation EE ?</div>
+          <div class="q-a">Le sujet mobilise directement les notions EE : loi d'Ohm et pertes Joule (justification de la HT), transformateurs (changement de tension), bilan puissance (production = consommation + pertes), rendement (STEP ~80 %), courant alternatif 50 Hz (fréquence réseau), stockage d'énergie. C'est presque un cours EE appliqué à l'échelle nationale.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Question ouverte</div>
+          <div class="q-q">La France peut-elle se passer du nucléaire ?</div>
+          <div class="q-a">Techniquement possible, mais complexe : le nucléaire assure la base (65 % de la production, pilotable, bas carbone). Sans lui, il faudrait massivement développer les EnR (éolien offshore, solaire) + du stockage + des interconnexions renforcées. Le débat est politique autant que technique. Le gouvernement actuel a choisi de prolonger l'existant ET de construire 6 nouveaux EPR2 — arbitrage entre sécurité d'approvisionnement et coût.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="progress">
+  <div class="prog-dot active" id="p0"></div>
+  <div class="prog-dot" id="p1"></div>
+  <div class="prog-dot" id="p2"></div>
+  <div class="prog-dot" id="p3"></div>
+  <div class="prog-dot" id="p4"></div>
+  <div class="prog-dot" id="p5"></div>
+</div>
+
+<script>
+  const colors = ['#534AB7','#1D9E75','#378ADD','#EF9F27','#E24B4A','#888780'];
+  let current = 0;
+
+  function show(n) {
+    const sy = window.scrollY;
+    const dir = n > current ? 'anim-right' : 'anim-left';
+    document.querySelectorAll('.fiche').forEach(f => f.classList.remove('active','anim-right','anim-left'));
+    document.querySelectorAll('.nav-btn').forEach((b,i) => {
+      b.classList.toggle('active', i===n);
+      b.style.background = i===n ? colors[n] : '';
+    });
+    document.querySelectorAll('.prog-dot').forEach((d,i) => {
+      d.classList.toggle('active', i===n);
+      d.style.background = i===n ? colors[n] : '';
+    });
+    const btn = document.querySelectorAll('.nav-btn')[n];
+    const navScroll = document.querySelector('.nav-scroll');
+    navScroll.scrollLeft = btn.offsetLeft - (navScroll.offsetWidth/2) + (btn.offsetWidth/2);
+    current = n;
+    const activeFiche = document.getElementById('f'+n);
+    activeFiche.classList.add('active');
+    requestAnimationFrame(() => {
+      activeFiche.classList.add(dir);
+      window.scrollTo(0, sy);
+    });
+  }
+
+  let startX = 0;
+  document.addEventListener('touchstart', e => startX = e.touches[0].clientX, {passive:true});
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if(Math.abs(dx) > 60) {
+      if(dx < 0 && current < 5) show(current+1);
+      if(dx > 0 && current > 0) show(current-1);
+    }
+  }, {passive:true});
+
+  show(0);
+</script>
+</body>
+</html>

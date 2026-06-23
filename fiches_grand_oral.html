@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Grand Oral IA">
+<title>Grand Oral — Impact de l'IA</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --purple:#534AB7; --purple-bg:#EEEDFE; --purple-text:#3C3489;
+    --teal:#1D9E75;   --teal-bg:#E1F5EE;   --teal-text:#085041;
+    --blue:#378ADD;   --blue-bg:#E6F1FB;   --blue-text:#0C447C;
+    --amber:#EF9F27;  --amber-bg:#FAEEDA;  --amber-text:#633806;
+    --red:#E24B4A;    --red-bg:#FCEBEB;    --red-text:#791F1F;
+    --gray:#888780;   --gray-bg:#F1EFE8;   --gray-text:#444441;
+    --border:#E5E4E0; --text:#1a1a1a; --text-sec:#666; --text-ter:#999;
+    --bg:#ffffff; --bg-sec:#F7F6F3;
+  }
+  body {
+    font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
+    background:#F2F1EE; color:var(--text); min-height:100vh;
+    padding-bottom:env(safe-area-inset-bottom); overflow-x:hidden;
+  }
+  .top-bar {
+    position:sticky; top:0; z-index:100;
+    background:rgba(242,241,238,0.92);
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    padding:12px 16px 0; border-bottom:0.5px solid var(--border);
+  }
+  .top-title { font-size:11px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; color:var(--text-ter); margin-bottom:10px; }
+  .nav-scroll { display:flex; gap:8px; overflow-x:auto; padding-bottom:12px; scrollbar-width:none; }
+  .nav-scroll::-webkit-scrollbar { display:none; }
+  .nav-btn {
+    flex-shrink:0; padding:8px 14px; border-radius:20px;
+    border:1px solid var(--border); background:white;
+    font-size:13px; font-weight:500; color:var(--text-sec);
+    cursor:pointer; transition:all 0.15s; white-space:nowrap;
+  }
+  .nav-btn.active { color:white; border-color:transparent; }
+  .fiche { display:none; padding:16px; }
+  .fiche.active { display:block; }
+  @keyframes slideInRight { from{opacity:0;transform:translateX(32px)} to{opacity:1;transform:translateX(0)} }
+  @keyframes slideInLeft  { from{opacity:0;transform:translateX(-32px)} to{opacity:1;transform:translateX(0)} }
+  .fiche.anim-right { animation:slideInRight 0.28s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .fiche.anim-left  { animation:slideInLeft  0.28s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .fiche-card { background:white; border-radius:16px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+  .fiche-header { padding:18px 18px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+  .fiche-num { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:700; flex-shrink:0; }
+  .fiche-title { font-size:17px; font-weight:700; line-height:1.2; }
+  .fiche-subtitle { font-size:12px; color:var(--text-sec); margin-top:2px; }
+  .fiche-body { padding:14px 18px 18px; display:flex; flex-direction:column; gap:16px; }
+  .section-label { font-size:10px; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:var(--text-ter); margin-bottom:8px; }
+  ul.pts { list-style:none; border-top:0.5px solid var(--border); }
+  ul.pts li { display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-bottom:0.5px solid var(--border); font-size:14px; line-height:1.5; }
+  ul.pts li:last-child { border-bottom:none; }
+  .li-text { flex:1; min-width:0; word-break:break-word; }
+  .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-top:5px; }
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .card { background:var(--bg-sec); border-radius:10px; padding:10px 12px; border:0.5px solid var(--border); }
+  .card-label { font-size:11px; color:var(--text-sec); margin-bottom:3px; }
+  .card-val { font-size:20px; font-weight:700; line-height:1.1; }
+  .card-ctx { font-size:10px; color:var(--text-ter); margin-top:3px; }
+  .tip,.warn { border-radius:0 10px 10px 0; padding:10px 14px; font-size:13px; line-height:1.5; }
+  .tip  { background:#EBF4FF; border-left:3px solid var(--blue);  color:var(--blue-text); }
+  .warn { background:#FFF8EC; border-left:3px solid var(--amber); color:var(--amber-text); }
+  .pue-box { background:var(--bg-sec); border-radius:12px; padding:14px 16px; border:0.5px solid var(--border); }
+  .pue-formula { font-size:13px; font-weight:600; text-align:center; padding:8px; background:white; border-radius:8px; border:0.5px solid var(--border); margin-bottom:10px; letter-spacing:0.02em; }
+  .pue-examples { display:flex; gap:8px; margin-bottom:10px; }
+  .pue-ex { flex:1; background:white; border-radius:8px; padding:8px 10px; border:0.5px solid var(--border); text-align:center; }
+  .pue-ex .val { font-size:16px; font-weight:700; }
+  .pue-ex .desc { font-size:10px; color:var(--text-sec); margin-top:2px; }
+  .pue-note { font-size:12px; color:var(--text-sec); line-height:1.5; }
+  .q-item { background:var(--bg-sec); border-radius:10px; padding:12px 14px; border:0.5px solid var(--border); }
+  .q-tag { font-size:10px; color:var(--text-ter); margin-bottom:4px; }
+  .q-q { font-size:15px; font-weight:700; margin-bottom:6px; }
+  .q-a { font-size:13px; color:#444; line-height:1.5; }
+  .q-list { display:flex; flex-direction:column; gap:10px; }
+  .progress { display:flex; justify-content:center; gap:6px; padding:12px 0 4px; }
+  .prog-dot { width:6px; height:6px; border-radius:50%; background:var(--border); transition:all 0.2s; }
+  .prog-dot.active { width:18px; border-radius:3px; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-title">Grand Oral — Impact de l'IA</div>
+  <div class="nav-scroll">
+    <button class="nav-btn active" onclick="show(0)">0 · Intro</button>
+    <button class="nav-btn" onclick="show(1)">1 · Environnement</button>
+    <button class="nav-btn" onclick="show(2)">2 · Énergie</button>
+    <button class="nav-btn" onclick="show(3)">3 · Économie</button>
+    <button class="nav-btn" onclick="show(4)">4 · Conclusion</button>
+    <button class="nav-btn" onclick="show(5)">5 · Questions</button>
+  </div>
+</div>
+
+<!-- FICHE 0 -->
+<div class="fiche active" id="f0">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--purple-bg);color:var(--purple-text);">0</div>
+      <div>
+        <div class="fiche-title" style="color:var(--purple-text);">Introduction</div>
+        <div class="fiche-subtitle">Accroche · Définition · Plan · ~1 min 30</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div>
+        <div class="section-label">Accroche — 2 chiffres forts</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--purple);"></span><span class="li-text">Entraîner GPT-3 : <strong>552 t CO₂</strong> — soit 5 allers-retours New York–San Francisco en avion. <em>(Patterson et al., 2021)</em></span></li>
+          <li><span class="dot" style="background:var(--purple);"></span><span class="li-text">Le numérique : <strong>~4 % des GES mondiaux</strong>, autant que l'aviation civile. <em>(The Shift Project, 2023)</em></span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Définir l'IA</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text">Systèmes apprenant sur des données → classer, générer, prédire.</span></li>
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text"><strong>Entraînement</strong> : coûteux, ponctuel. <strong>Inférence</strong> : moins intense par requête, mais continu et massif.</span></li>
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text">Repose sur une infrastructure physique : terminaux, réseaux, data centers.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Plan</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--teal);"></span><span class="li-text"><strong>Axe 1</strong> — Impact environnemental</span></li>
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text"><strong>Axe 2</strong> — Impact énergétique</span></li>
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text"><strong>Axe 3</strong> — Impact économique</span></li>
+        </ul>
+      </div>
+      <div class="tip">💡 STI2D : bilans énergétiques, empreinte carbone (EE) + systèmes numériques (I2D) — l'IA est le cas concret qui relie les deux.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHE 1 -->
+<div class="fiche" id="f1">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--teal-bg);color:var(--teal-text);">1</div>
+      <div>
+        <div class="fiche-title" style="color:var(--teal-text);">Axe 1 — Impact environnemental</div>
+        <div class="fiche-subtitle">CO₂ · Eau · E-waste · ~2 min 30</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div class="cards">
+        <div class="card"><div class="card-label">CO₂ — GPT-3</div><div class="card-val" style="color:var(--teal-text);">552 t</div><div class="card-ctx">Patterson et al., 2021</div></div>
+        <div class="card"><div class="card-label">Eau — GPT-3</div><div class="card-val" style="color:var(--teal-text);">700 000 L</div><div class="card-ctx">Li et al., 2023</div></div>
+        <div class="card"><div class="card-label">Numérique / GES mondiaux</div><div class="card-val" style="color:var(--teal-text);">~4 %</div><div class="card-ctx">The Shift Project, 2023</div></div>
+        <div class="card"><div class="card-label">E-waste mondial TIC</div><div class="card-val" style="color:var(--teal-text);">62 Mt/an</div><div class="card-ctx">ONU, 2022</div></div>
+      </div>
+      <div>
+        <div class="section-label">Empreinte carbone</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--teal);"></span><span class="li-text">Dépend fortement du <strong>mix électrique local</strong> : data center en Islande (géothermie) vs Pologne (charbon) → écart ×10 pour le même calcul.</span></li>
+          <li><span class="dot" style="background:var(--teal);"></span><span class="li-text">GPT-4 estimé à plusieurs <strong>milliers de tonnes</strong> de CO₂ à l'entraînement — les modèles récents sont bien plus grands que GPT-3.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Eau &amp; E-waste</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--teal);"></span><span class="li-text"><strong>Eau :</strong> refroidissement par tours d'eau. Problème de <strong>stress hydrique local</strong> — certains data centers sont implantés en zones arides (coût du foncier).</span></li>
+          <li><span class="dot" style="background:var(--teal);"></span><span class="li-text"><strong>E-waste :</strong> GPU renouvelés tous les 2–3 ans, matières rares (cobalt, lithium). Seulement ~20 % des e-déchets traités correctement (ONU).</span></li>
+        </ul>
+      </div>
+      <div class="tip">💡 EE : relier au cycle de vie (ACV) — la fabrication des GPU représente parfois plus d'impact carbone que leur usage.</div>
+      <div class="warn">⚠️ Nuance : l'IA aide aussi à modéliser le climat et optimiser les réseaux électriques — cause ET solution potentielle.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHE 2 -->
+<div class="fiche" id="f2">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--blue-bg);color:var(--blue-text);">2</div>
+      <div>
+        <div class="fiche-title" style="color:var(--blue-text);">Axe 2 — Impact énergétique</div>
+        <div class="fiche-subtitle">Chaîne complète · PUE · Entraînement vs Inférence · ~2 min 30</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div>
+        <div class="section-label">La chaîne complète — Internet inclus</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text">Chaque requête IA parcourt : <strong>terminal → réseau WiFi/4G/5G → backbone Internet → data center</strong>. Chaque maillon consomme de l'énergie.</span></li>
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text">Réseaux de télécoms : <strong>~200 TWh/an</strong> (IEA) — séparément des data centers, soit un niveau comparable.</span></li>
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text">L'IA aggrave la situation : réponses plus lourdes, images et vidéos générées → <strong>trafic réseau en forte hausse</strong>.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Le PUE — Power Usage Effectiveness</div>
+        <div class="pue-box">
+          <div class="pue-formula">PUE = Énergie totale du data center ÷ Énergie utile (calcul)</div>
+          <div class="pue-examples">
+            <div class="pue-ex"><div class="val" style="color:var(--teal-text);">1,0</div><div class="desc">Idéal — impossible en pratique</div></div>
+            <div class="pue-ex"><div class="val" style="color:var(--blue-text);">1,1</div><div class="desc">Google (meilleur de classe)</div></div>
+            <div class="pue-ex"><div class="val" style="color:var(--amber-text);">1,5</div><div class="desc">Moyenne industrie</div></div>
+            <div class="pue-ex"><div class="val" style="color:var(--red-text);">2,0</div><div class="desc">Anciens centres</div></div>
+          </div>
+          <div class="pue-note">Exemple concret : PUE = 1,5 → pour <strong>100 kW de calcul</strong>, 50 kW supplémentaires sont gaspillés en <strong>climatisation</strong> (~40% des pertes) et conversions électriques.<br><br>Les GPU IA génèrent 2–3× plus de chaleur que des serveurs classiques → pression accrue sur le PUE.</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Entraînement vs inférence &amp; tendance</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text"><strong>Entraînement :</strong> ponctuel mais intense — semaines de calcul sur des milliers de GPU.</span></li>
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text"><strong>Inférence :</strong> ~10× plus énergivore qu'une recherche Google par requête, <strong>et</strong> des milliards de requêtes/jour → effet cumulé : l'inférence dépasse largement l'entraînement en impact total.</span></li>
+          <li><span class="dot" style="background:var(--blue);"></span><span class="li-text">Data centers : <strong>~415 TWh en 2024</strong> → <strong>~945 TWh projetés d'ici 2030</strong> (IEA, rapport "Energy and AI", 2025). Croissance de +12 %/an depuis 2017.</span></li>
+        </ul>
+      </div>
+      <div class="tip">💡 EE : PUE = notion de rendement. Entraînement = puissance de crête. Inférence = régime permanent. Vocabulaire de cours directement applicable.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHE 3 -->
+<div class="fiche" id="f3">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--amber-bg);color:var(--amber-text);">3</div>
+      <div>
+        <div class="fiche-title" style="color:var(--amber-text);">Axe 3 — Impact économique</div>
+        <div class="fiche-subtitle">Marché · Emploi · Coûts · Bénéfices · ~2 min</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div class="cards">
+        <div class="card"><div class="card-label">Marché IA (2023)</div><div class="card-val" style="color:var(--amber-text);">~200 Md$</div><div class="card-ctx">&gt;1 800 Md$ en 2030 (Statista)</div></div>
+        <div class="card"><div class="card-label">Gain PIB potentiel</div><div class="card-val" style="color:var(--amber-text);">+7 %</div><div class="card-ctx">Goldman Sachs, 2023 — 10 ans</div></div>
+        <div class="card"><div class="card-label">Emplois exposés</div><div class="card-val" style="color:var(--amber-text);">~40 %</div><div class="card-ctx">FMI, 2024</div></div>
+        <div class="card"><div class="card-label">Coût entraîn. GPT-4</div><div class="card-val" style="color:var(--amber-text);">&gt;100 M$</div><div class="card-ctx">Sam Altman, 2023 (estim.)</div></div>
+      </div>
+      <div>
+        <div class="section-label">3 dimensions</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text"><strong>Marché :</strong> Nvidia ×8 en bourse entre 2022 et 2024. Nouvelles industries créées : cloud IA, MLOps, prompt engineering, cybersécurité IA.</span></li>
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text"><strong>Emploi :</strong> 40 % "exposés" ≠ 40 % perdus — certains augmentés, d'autres transformés. Le vrai risque : une <strong>transition inégale</strong> selon les pays et les niveaux de qualification.</span></li>
+          <li><span class="dot" style="background:var(--amber);"></span><span class="li-text"><strong>Bénéfices :</strong> gains de productivité estimés 2 600–4 400 Md$/an (McKinsey, 2023), mais concentration chez les géants tech — <strong>fracture numérique</strong> Nord/Sud.</span></li>
+        </ul>
+      </div>
+      <div class="warn">⚠️ Paradoxe : l'IA coûte cher en énergie et en eau, mais génère suffisamment de valeur économique pour que les entreprises continuent d'investir massivement.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHE 4 -->
+<div class="fiche" id="f4">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--red-bg);color:var(--red-text);">4</div>
+      <div>
+        <div class="fiche-title" style="color:var(--red-text);">Conclusion</div>
+        <div class="fiche-subtitle">Bilan · Tension · Ouverture · ~1 min</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div>
+        <div class="section-label">Bilan par axe</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--red);"></span><span class="li-text"><strong>Environnemental :</strong> impact réel — CO₂, eau, e-waste — mais très dépendant des choix de localisation et du mix énergétique.</span></li>
+          <li><span class="dot" style="background:var(--red);"></span><span class="li-text"><strong>Énergétique :</strong> toute la chaîne consomme (réseau inclus). PUE en amélioration, mais demande ×2,3 d'ici 2030 selon l'IEA.</span></li>
+          <li><span class="dot" style="background:var(--red);"></span><span class="li-text"><strong>Économique :</strong> moteur de croissance, mais gains concentrés et risque de fracture numérique.</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">La tension centrale</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text">L'IA est à la fois <strong>cause</strong> (consommatrice de ressources) et <strong>solution potentielle</strong> (optimisation énergétique, transition écologique).</span></li>
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text">La question n'est pas "faut-il l'IA ?" mais "<strong>comment la développer de façon soutenable ?</strong>"</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">Ouverture</div>
+        <ul class="pts">
+          <li><span class="dot" style="background:var(--gray);"></span><span class="li-text">Pistes : IA frugale (Mistral, Phi-3), data centers à énergie verte, AI Act européen (2024), sobriété numérique.</span></li>
+        </ul>
+      </div>
+      <div class="tip">🎯 <strong>Phrase de fin :</strong> "L'IA restera une opportunité ou deviendra une contrainte selon les choix que nos sociétés feront dans les 10 prochaines années."</div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHE 5 -->
+<div class="fiche" id="f5">
+  <div class="fiche-card">
+    <div class="fiche-header">
+      <div class="fiche-num" style="background:var(--gray-bg);color:var(--gray-text);">5</div>
+      <div>
+        <div class="fiche-title" style="color:var(--gray-text);">Questions probables du jury</div>
+        <div class="fiche-subtitle">10 min de Q&amp;A — 9 questions</div>
+      </div>
+    </div>
+    <div class="fiche-body">
+      <div class="q-list">
+        <div class="q-item">
+          <div class="q-tag">EE — concept technique clé</div>
+          <div class="q-q">Explique-moi concrètement le PUE.</div>
+          <div class="q-a">PUE = énergie totale du data center ÷ énergie utile au calcul. Exemple : PUE = 1,5 → pour 100 kW de calcul, 50 kW supplémentaires sont gaspillés, principalement en climatisation (~40 % des pertes) et conversions électriques. Les GPU IA génèrent 2–3× plus de chaleur que des serveurs classiques, ce qui aggrave ce ratio. Google atteint ~1,1 en utilisant l'IA elle-même pour optimiser le refroidissement (DeepMind).</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Internet</div>
+          <div class="q-q">Pourquoi parles-tu d'Internet dans l'axe énergie ?</div>
+          <div class="q-a">Parce que l'impact énergétique de l'IA ne se limite pas aux data centers. Chaque requête parcourt toute une chaîne : terminal → réseau WiFi/4G/5G → backbone Internet (câbles sous-marins, routeurs) → data center. Les réseaux de télécoms consomment ~200 TWh/an séparément des data centers (IEA). L'IA augmente aussi le trafic réseau car ses réponses sont plus lourdes.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Nuance</div>
+          <div class="q-q">L'IA ne peut-elle pas aussi aider l'environnement ?</div>
+          <div class="q-a">Oui — DeepMind a réduit la conso de refroidissement de Google de 40 %. L'IA aide la modélisation climatique, l'optimisation des réseaux électriques, la prévision des besoins en énergie. C'est le paradoxe central : l'IA est à la fois cause du problème et outil de la solution.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Sources</div>
+          <div class="q-q">D'où viennent tes chiffres ?</div>
+          <div class="q-a">CO₂/eau GPT-3 : Patterson et al. 2021 (Google Brain) / Li et al. 2023 (UC Riverside). Énergie data centers et réseaux : IEA 2023. Emplois : FMI 2024. Marché : Statista. Gains productivité : McKinsey 2023. Sources académiques et institutionnelles dans tous les cas.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Comparaison sectorielle</div>
+          <div class="q-q">L'IA est-elle vraiment si polluante par rapport à d'autres secteurs ?</div>
+          <div class="q-a">Numérique ~4 % des émissions mondiales = aviation civile. Sidérurgie ~8 %. L'IA seule = une fraction du numérique. Mais c'est la croissance qui inquiète : ×4 de consommation en 4 ans (IEA), là où d'autres secteurs décarbonent.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Emploi</div>
+          <div class="q-q">L'IA va-t-elle vraiment détruire des emplois ?</div>
+          <div class="q-a">FMI : 40 % "exposés" ≠ 40 % perdus. Certains seront augmentés, d'autres transformés. Historiquement, chaque révolution tech a détruit ET créé des emplois. Le vrai risque : la transition et les inégalités d'accès à la requalification.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Solutions</div>
+          <div class="q-q">Que fait-on concrètement pour limiter l'impact ?</div>
+          <div class="q-a">1) IA frugale : petits modèles efficaces (Mistral, Phi-3). 2) Data centers à énergie verte — Microsoft + réacteur nucléaire Three Mile Island (2024). 3) AI Act européen 2024 : transparence imposée. 4) Sobriété : mutualiser les modèles. 5) Efficacité algorithmique.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Lien spécialité</div>
+          <div class="q-q">En quoi ce sujet se rattache à ta formation STI2D ?</div>
+          <div class="q-a">Double lien : EE — bilan énergétique, rendement (PUE), empreinte carbone, transition énergétique. I2D — architecture des systèmes numériques, algorithmes, traitement de données. L'IA est un système numérique avec un impact physique réel — elle fait le pont entre les deux options.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-tag">Question ouverte</div>
+          <div class="q-q">Un risque que tu n'as pas traité ?</div>
+          <div class="q-a">La concentration de puissance : l'IA est contrôlée par quelques entreprises (OpenAI, Google, Meta) et quelques États. Risques géopolitiques et de souveraineté numérique. L'AI Act européen tente d'y répondre, mais les USA et la Chine n'ont pas de contraintes équivalentes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="progress">
+  <div class="prog-dot active" id="p0"></div>
+  <div class="prog-dot" id="p1"></div>
+  <div class="prog-dot" id="p2"></div>
+  <div class="prog-dot" id="p3"></div>
+  <div class="prog-dot" id="p4"></div>
+  <div class="prog-dot" id="p5"></div>
+</div>
+
+<script>
+  const colors = ['#534AB7','#1D9E75','#378ADD','#EF9F27','#E24B4A','#888780'];
+  let current = 0;
+
+  function show(n) {
+    const sy = window.scrollY;
+    const dir = n > current ? 'anim-right' : 'anim-left';
+    document.querySelectorAll('.fiche').forEach(f => f.classList.remove('active','anim-right','anim-left'));
+    document.querySelectorAll('.nav-btn').forEach((b,i) => {
+      b.classList.toggle('active', i===n);
+      b.style.background = i===n ? colors[n] : '';
+    });
+    document.querySelectorAll('.prog-dot').forEach((d,i) => {
+      d.classList.toggle('active', i===n);
+      d.style.background = i===n ? colors[n] : '';
+    });
+    const btn = document.querySelectorAll('.nav-btn')[n];
+    const navScroll = document.querySelector('.nav-scroll');
+    navScroll.scrollLeft = btn.offsetLeft - (navScroll.offsetWidth/2) + (btn.offsetWidth/2);
+    current = n;
+    const activeFiche = document.getElementById('f'+n);
+    activeFiche.classList.add('active');
+    requestAnimationFrame(() => {
+      activeFiche.classList.add(dir);
+      window.scrollTo(0, sy);
+    });
+  }
+
+  let startX = 0;
+  document.addEventListener('touchstart', e => startX = e.touches[0].clientX, {passive:true});
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if(Math.abs(dx) > 60) {
+      if(dx < 0 && current < 5) show(current+1);
+      if(dx > 0 && current > 0) show(current-1);
+    }
+  }, {passive:true});
+
+  show(0);
+</script>
+</body>
+</html>

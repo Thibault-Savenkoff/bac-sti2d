@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grand Oral — Synthèse</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; background: #F2F1EE; color: #1a1a1a; padding: 12px; }
+
+  .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+  .tab { flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid #E5E4E0; background: white; font-size: 13px; font-weight: 600; color: #666; cursor: pointer; text-align: center; }
+  .tab.active { color: white; border-color: transparent; }
+  .tab.t0.active { background: #534AB7; }
+  .tab.t1.active { background: #1D9E75; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .block { background: white; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .block-title { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #999; margin-bottom: 10px; }
+
+  /* Plan */
+  .plan-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 0.5px solid #E5E4E0; }
+  .plan-row:last-child { border-bottom: none; }
+  .plan-num { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .plan-text { font-size: 14px; font-weight: 600; flex: 1; }
+  .plan-sub { font-size: 11px; color: #888; margin-top: 1px; }
+
+  /* Chiffres */
+  .nums { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .num { background: #F7F6F3; border-radius: 9px; padding: 8px 10px; border: 0.5px solid #E5E4E0; }
+  .num-val { font-size: 19px; font-weight: 700; line-height: 1.1; }
+  .num-label { font-size: 10px; color: #888; margin-top: 2px; line-height: 1.3; }
+
+  /* Concepts */
+  .concept { display: flex; gap: 9px; align-items: flex-start; padding: 7px 0; border-bottom: 0.5px solid #E5E4E0; font-size: 13px; line-height: 1.4; }
+  .concept:last-child { border-bottom: none; }
+  .ckey { font-weight: 700; flex-shrink: 0; }
+
+  /* Phrase fin */
+  .phrase { font-size: 13px; line-height: 1.6; color: #333; font-style: italic; border-left: 3px solid #E5E4E0; padding-left: 12px; }
+</style>
+</head>
+<body>
+
+<div class="tabs">
+  <button class="tab t0 active" onclick="show(0)">⚡ Électricité</button>
+  <button class="tab t1" onclick="show(1)">🤖 IA</button>
+</div>
+
+<!-- PAGE ÉLECTRICITÉ -->
+<div class="page active" id="p0">
+
+  <div class="block">
+    <div class="block-title">Plan — 3 axes</div>
+    <div class="plan-row">
+      <div class="plan-num" style="background:#E1F5EE;color:#085041;">1</div>
+      <div><div class="plan-text">Production</div><div class="plan-sub">Mix · Nucléaire · EnR · Atouts / Limites</div></div>
+    </div>
+    <div class="plan-row">
+      <div class="plan-num" style="background:#E6F1FB;color:#0C447C;">2</div>
+      <div><div class="plan-text">Transport & Distribution</div><div class="plan-sub">Niveaux tension · RTE / Enedis · Équilibre 50 Hz</div></div>
+    </div>
+    <div class="plan-row">
+      <div class="plan-num" style="background:#FAEEDA;color:#633806;">3</div>
+      <div><div class="plan-text">Répartition technique</div><div class="plan-sub">Loi des nœuds · Maillé vs radial · Joule</div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Chiffres à retenir</div>
+    <div class="nums">
+      <div class="num"><div class="num-val" style="color:#085041;">536,5 TWh</div><div class="num-label">Production 2023 (RTE)</div></div>
+      <div class="num"><div class="num-val" style="color:#085041;">~92 %</div><div class="num-label">Bas carbone (nucl. + EnR)</div></div>
+      <div class="num"><div class="num-val" style="color:#085041;">67,4 %</div><div class="num-label">Nucléaire (2023)</div></div>
+      <div class="num"><div class="num-val" style="color:#085041;">+89 TWh</div><div class="num-label">Export net 2024 (record)</div></div>
+      <div class="num"><div class="num-val" style="color:#0C447C;">106 000 km</div><div class="num-label">Lignes RTE (THT/HT)</div></div>
+      <div class="num"><div class="num-val" style="color:#0C447C;">730 000 km</div><div class="num-label">Lignes Enedis (HTA/BT)</div></div>
+      <div class="num"><div class="num-val" style="color:#633806;">~5 %</div><div class="num-label">Pertes réseau totales</div></div>
+      <div class="num"><div class="num-val" style="color:#633806;">~6 000</div><div class="num-label">Nœuds surveillés (RTE)</div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Niveaux de tension (à réciter)</div>
+    <div class="concept"><span class="ckey" style="color:#534AB7;">400/225 kV</span> THT — transport longue distance — RTE</div>
+    <div class="concept"><span class="ckey" style="color:#378ADD;">63/90 kV</span> HT — transport régional — RTE</div>
+    <div class="concept"><span class="ckey" style="color:#EF9F27;">20 kV</span> HTA — distribution — Enedis</div>
+    <div class="concept"><span class="ckey" style="color:#1D9E75;">230/400 V</span> BT — usage domestique — Enedis</div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Concepts EE clés</div>
+    <div class="concept"><span class="ckey">Loi des nœuds</span> ΣI_entrées = ΣI_sorties — conserv. de la charge</div>
+    <div class="concept"><span class="ckey">Pertes Joule</span> P = R·I² → transporter à haute tension réduit I → moins de pertes</div>
+    <div class="concept"><span class="ckey">50 Hz</span> Fréquence réseau = reflet de l'équilibre prod/conso. RTE tient ±0,2 Hz</div>
+    <div class="concept"><span class="ckey">R = ρL/S</span> Résistance de ligne — ρ alu = 2,7×10⁻⁸ Ω·m</div>
+    <div class="concept"><span class="ckey">Maillé vs radial</span> RTE maillé = redondant ; Enedis radial = simple mais fragile</div>
+    <div class="concept"><span class="ckey">STEP</span> Seul stockage massif FR : ~5 GW, rendement ~80 %</div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Crise 2022 → mémo</div>
+    <div class="concept"><span class="ckey">3 causes</span> 50 % parc nucl. à l'arrêt (corrosion) + sécheresse + crise gaz</div>
+    <div class="concept"><span class="ckey">2024</span> Rebond : 361,7 TWh nucl. + EPR Flamanville (déc. 2024) → export record</div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Phrase de fin</div>
+    <div class="phrase">"Répartir l'électricité en France, c'est arbitrer en permanence entre disponibilité, décarbonation et coût — un équilibre de plus en plus complexe à l'heure de l'électrification de tout."</div>
+  </div>
+
+</div>
+
+<!-- PAGE IA -->
+<div class="page" id="p1">
+
+  <div class="block">
+    <div class="block-title">Plan — 3 axes</div>
+    <div class="plan-row">
+      <div class="plan-num" style="background:#E1F5EE;color:#085041;">1</div>
+      <div><div class="plan-text">Impact environnemental</div><div class="plan-sub">CO₂ · Eau · E-waste</div></div>
+    </div>
+    <div class="plan-row">
+      <div class="plan-num" style="background:#E6F1FB;color:#0C447C;">2</div>
+      <div><div class="plan-text">Impact énergétique</div><div class="plan-sub">Chaîne complète · PUE · Entraîn. vs inférence</div></div>
+    </div>
+    <div class="plan-row">
+      <div class="plan-num" style="background:#FAEEDA;color:#633806;">3</div>
+      <div><div class="plan-text">Impact économique</div><div class="plan-sub">Marché · Emploi · Bénéfices / fracture</div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Chiffres à retenir</div>
+    <div class="nums">
+      <div class="num"><div class="num-val" style="color:#085041;">552 t CO₂</div><div class="num-label">Entraîn. GPT-3 (Patterson 2021)</div></div>
+      <div class="num"><div class="num-val" style="color:#085041;">700 000 L</div><div class="num-label">Eau GPT-3 (Li 2023)</div></div>
+      <div class="num"><div class="num-val" style="color:#085041;">~4 %</div><div class="num-label">GES mondiaux du numérique</div></div>
+      <div class="num"><div class="num-val" style="color:#085041;">62 Mt/an</div><div class="num-label">E-waste TIC (ONU 2022)</div></div>
+      <div class="num"><div class="num-val" style="color:#0C447C;">415 TWh</div><div class="num-label">Data centers 2024 (IEA)</div></div>
+      <div class="num"><div class="num-val" style="color:#0C447C;">945 TWh</div><div class="num-label">Projection 2030 (IEA)</div></div>
+      <div class="num"><div class="num-val" style="color:#633806;">~200 Md$</div><div class="num-label">Marché IA 2023</div></div>
+      <div class="num"><div class="num-val" style="color:#633806;">~40 %</div><div class="num-label">Emplois "exposés" (FMI 2024)</div></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">PUE — Power Usage Effectiveness</div>
+    <div class="concept"><span class="ckey">Formule</span> PUE = énergie totale DC ÷ énergie calcul</div>
+    <div class="concept"><span class="ckey">1,0</span> Idéal impossible · <span class="ckey">1,1</span> Google · <span class="ckey">1,5</span> Moyenne · <span class="ckey">2,0</span> Vieux DC</div>
+    <div class="concept"><span class="ckey">Exemple</span> PUE 1,5 → 100 kW calcul + 50 kW gaspillés (clim + conversions)</div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Concepts clés</div>
+    <div class="concept"><span class="ckey">Entraînement</span> Ponctuel mais intense — semaines, milliers de GPU</div>
+    <div class="concept"><span class="ckey">Inférence</span> ×10 vs Google Search/requête, mais milliards/jour → impact total > entraîn.</div>
+    <div class="concept"><span class="ckey">Chaîne énergie</span> Terminal → WiFi/4G → backbone → data center. Télécoms : ~200 TWh/an (IEA)</div>
+    <div class="concept"><span class="ckey">Paradoxe central</span> IA = cause (CO₂, eau) ET solution (optimis. réseaux, climat)</div>
+    <div class="concept"><span class="ckey">Accroche choc</span> 552 t CO₂ GPT-3 = 5 A/R New York–San Francisco en avion</div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Solutions à citer</div>
+    <div class="concept"><span class="ckey">IA frugale</span> Mistral, Phi-3 — petits modèles efficaces</div>
+    <div class="concept"><span class="ckey">Énergie verte</span> Microsoft + Three Mile Island (2024)</div>
+    <div class="concept"><span class="ckey">Réglementation</span> AI Act européen 2024</div>
+    <div class="concept"><span class="ckey">Optimisation</span> DeepMind réduit refroidissement Google de 40 %</div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Phrase de fin</div>
+    <div class="phrase">"L'IA restera une opportunité ou deviendra une contrainte selon les choix que nos sociétés feront dans les 10 prochaines années."</div>
+  </div>
+
+</div>
+
+<script>
+  function show(n) {
+    document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===n));
+    document.querySelectorAll('.page').forEach((p,i) => p.classList.toggle('active', i===n));
+  }
+</script>
+</body>
+</html>

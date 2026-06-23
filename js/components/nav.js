@@ -8,6 +8,7 @@ const TABS = [
   { id: 'formules',   label: 'Formules',    icon: '∑' },
   { id: 'annales',    label: 'Annales',     icon: '📝' },
   { id: 'imprimer',   label: 'Imprimer',    icon: '⎙' },
+  { id: 'grand-oral', label: 'Grand Oral',  icon: '🎤' },
 ];
 
 export function renderNav(dueCount = 0) {
