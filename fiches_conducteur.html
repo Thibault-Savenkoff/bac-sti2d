@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Conducteur d'oral</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; background: #F2F1EE; color: #1a1a1a; min-height: 100vh; padding-bottom: 32px; }
+
+  .top-bar { position: sticky; top: 0; z-index: 100; background: rgba(242,241,238,0.95); backdrop-filter: blur(12px); padding: 10px 14px 0; border-bottom: 0.5px solid #E5E4E0; }
+  .top-label { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #aaa; margin-bottom: 8px; }
+  .tabs { display: flex; gap: 8px; padding-bottom: 10px; }
+  .tab { flex: 1; padding: 9px; border-radius: 20px; border: 1px solid #E5E4E0; background: white; font-size: 13px; font-weight: 600; color: #666; cursor: pointer; text-align: center; }
+  .tab.t0.active { background: #1D9E75; color: white; border-color: transparent; }
+  .tab.t1.active { background: #534AB7; color: white; border-color: transparent; }
+
+  .page { display: none; padding: 12px 14px; }
+  .page.active { display: block; }
+
+  /* Step block */
+  .step { background: white; border-radius: 14px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .step-header { display: flex; align-items: center; gap: 11px; padding: 12px 14px 10px; border-bottom: 0.5px solid #F0EFE9; }
+  .step-num { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+  .step-title { font-size: 15px; font-weight: 700; line-height: 1.2; }
+  .step-time { font-size: 11px; color: #aaa; margin-top: 2px; }
+  .step-body { padding: 10px 14px 12px; display: flex; flex-direction: column; gap: 7px; }
+
+  /* Points */
+  .pt { display: flex; gap: 9px; align-items: flex-start; font-size: 13.5px; line-height: 1.5; }
+  .pt-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .pt-text { flex: 1; }
+  .pt-text b { font-weight: 700; }
+
+  /* Number chips inline */
+  .chip { display: inline-block; font-weight: 700; font-size: 12px; padding: 1px 7px; border-radius: 10px; margin: 0 1px; }
+
+  /* Tip */
+  .tip { background: #EBF4FF; border-left: 3px solid #378ADD; border-radius: 0 8px 8px 0; padding: 8px 12px; font-size: 12.5px; color: #0C447C; line-height: 1.5; }
+  .warn { background: #FFF8EC; border-left: 3px solid #EF9F27; border-radius: 0 8px 8px 0; padding: 8px 12px; font-size: 12.5px; color: #633806; line-height: 1.5; }
+
+  /* Phrase finale */
+  .phrase { font-style: italic; font-size: 13.5px; color: #333; line-height: 1.6; border-left: 3px solid #D0CFC9; padding: 8px 12px; background: #F7F6F3; border-radius: 0 8px 8px 0; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-label">Conducteur d'oral — dans l'ordre du discours</div>
+  <div class="tabs">
+    <button class="tab t0 active" onclick="show(0)">⚡ Électricité</button>
+    <button class="tab t1" onclick="show(1)">🤖 IA</button>
+  </div>
+</div>
+
+<!-- ══════════ ÉLECTRICITÉ ══════════ -->
+<div class="page active" id="p0">
+
+  <!-- ÉTAPE 1 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#E1F5EE;color:#085041;">1</div>
+      <div>
+        <div class="step-title" style="color:#085041;">Accroche</div>
+        <div class="step-time">~30 sec</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#1D9E75;"></span><span class="pt-text">La France produit <b>~536,5 TWh d'électricité par an</b> (2023, RTE) — l'un des mix les plus décarbonés d'Europe à <b>~92 % bas carbone</b>.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#1D9E75;"></span><span class="pt-text">En 2024, la France est devenue <b>exportatrice nette record : +89 TWh</b>, valorisés à 5 milliards €. Contraste saisissant avec 2022 où elle était <b>importatrice nette pour la 1ère fois en 40 ans</b>.</span></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 2 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#E1F5EE;color:#085041;">2</div>
+      <div>
+        <div class="step-title" style="color:#085041;">Définir "répartir"</div>
+        <div class="step-time">~20 sec</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#888;"></span><span class="pt-text">Répartir = <b>produire</b> au bon endroit + <b>transporter</b> jusqu'aux usages + <b>équilibrer</b> offre et demande en temps réel.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#888;"></span><span class="pt-text">L'électricité ne se stocke pas — équilibre permanent prod/conso, <b>seconde par seconde</b>.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#888;"></span><span class="pt-text">Enjeu croissant : électrification (VE, PAC) → demande <b>+30 à 40 %</b> d'ici 2050.</span></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 3 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#E1F5EE;color:#085041;">3</div>
+      <div>
+        <div class="step-title" style="color:#085041;">Annonce du plan</div>
+        <div class="step-time">~20 sec</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#1D9E75;"></span><span class="pt-text"><b>Axe 1</b> — D'où vient l'électricité française ? (la production)</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#378ADD;"></span><span class="pt-text"><b>Axe 2</b> — Comment elle voyage jusqu'à nous ? (transport & distribution)</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#EF9F27;"></span><span class="pt-text"><b>Axe 3</b> — Comment elle se répartit techniquement ? (loi des nœuds, Joule)</span></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 4 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#E6F1FB;color:#0C447C;">4</div>
+      <div>
+        <div class="step-title" style="color:#0C447C;">Axe 1 — La production</div>
+        <div class="step-time">~2 min 30</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#3B6FCA;"></span><span class="pt-text"><b>Nucléaire 67,4 %</b> — base stable, ~6 gCO₂/kWh, pilotable. Retour en force 2024 : 361,7 TWh + EPR Flamanville 21/12/2024. ⚠ Maintenance, besoin d'eau.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#1D9E75;"></span><span class="pt-text"><b>Hydraulique 13,9 %</b> — seule EnR pilotable à grande échelle. ⚠ Pluviométrie.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#6BBDE3;"></span><span class="pt-text"><b>Éolien ~10 %, Solaire ~5 %</b> — forte croissance, records 2023. ⚠ Intermittence, non pilotable → défi équilibre réseau.</span></div>
+      <div class="warn">⚠ Crise 2022 : triple crise simultanée (corrosion nucl. + sécheresse + Ukraine/gaz) → importatrice nette pour la 1ère fois en 40 ans. 2024 : retour en force, export record +89 TWh.</div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 5 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#E6F1FB;color:#0C447C;">5</div>
+      <div>
+        <div class="step-title" style="color:#0C447C;">Axe 2 — Transport & Distribution</div>
+        <div class="step-time">~2 min 30</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#534AB7;"></span><span class="pt-text">L'électricité descend en tension par étapes : <b>400/225 kV (THT)</b> pour le transport longue distance, <b>63/90 kV (HT)</b> pour le régional — tout ça géré par <b>RTE</b> (106 000 km). Puis <b>20 kV (HTA)</b> et <b>230 V (BT)</b> pour la distribution jusqu'au foyer, géré par <b>Enedis</b> (~730 000 km).</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#378ADD;"></span><span class="pt-text">RTE et Enedis ne vendent pas d'électricité — ils assurent le <b>transit</b>. RTE surveille l'équilibre en temps réel, interconnecté à <b>7 pays voisins</b>.</span></div>
+      <div class="tip">💡 EE : on transporte à HT pour minimiser les pertes Joule. <b>P = R·I²</b> — abaisser I en montant U (P = U·I) → même puissance, pertes divisées. C'est le rôle des transformateurs.</div>
+      <div class="pt"><span class="pt-dot" style="background:#378ADD;"></span><span class="pt-text">Le réseau tourne en <b>courant alternatif à 50 Hz</b>. Cette fréquence = reflet de l'équilibre prod/conso. RTE tient <b>50 Hz ± 0,2 Hz</b> en permanence. Pertes totales : <b>~5 %</b> (chaleur dans les câbles).</span></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 6 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#FAEEDA;color:#633806;">6</div>
+      <div>
+        <div class="step-title" style="color:#633806;">Axe 3 — Répartition technique</div>
+        <div class="step-time">~2 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#EF9F27;"></span><span class="pt-text"><b>Loi des nœuds</b> : à chaque poste, ΣI_entrées = ΣI_sorties. Conservation de la charge — rien ne se perd. RTE surveille ce bilan sur <b>~6 000 nœuds</b> en temps réel au dispatching national (Saint-Denis).</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#EF9F27;"></span><span class="pt-text"><b>Réseau maillé (RTE)</b> : plusieurs chemins entre deux points. Le courant se distribue automatiquement selon <b>R = ρ·L/S</b> — les lignes courtes à grande section conduisent davantage.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#EF9F27;"></span><span class="pt-text"><b>Réseau radial (Enedis)</b> : un seul chemin par départ. Plus simple à gérer, mais fragile : panne = coupure totale du départ.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#EF9F27;"></span><span class="pt-text"><b>Bilan de puissance</b> : P_produite = P_consommée + P_pertes (~5 % perdus en chaleur). Objectif RTE : minimiser ΣR·I² — optimisation numérique en temps réel.</span></div>
+      <div class="tip">💡 EE direct : loi des nœuds, loi des mailles, diviseur de courant, effet Joule — tout ce que tu calcules sur des circuits en cours, RTE le fait sur 6 000 nœuds en temps réel.</div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 7 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#FCEBEB;color:#791F1F;">7</div>
+      <div>
+        <div class="step-title" style="color:#791F1F;">Conclusion</div>
+        <div class="step-time">~1 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#E24B4A;"></span><span class="pt-text"><b>Production</b> : mix décarbonné à ~92 %, atout majeur — mais vulnérable (dépendance nucléaire, intermittence EnR).</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#E24B4A;"></span><span class="pt-text"><b>Transport/distribution</b> : infrastructure robuste (RTE + Enedis), mais vieillissante face aux nouveaux usages.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#E24B4A;"></span><span class="pt-text"><b>Répartition technique</b> : loi des nœuds et effet Joule gouvernent physiquement la distribution — RTE optimise sur ~6 000 nœuds en temps réel.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#888;"></span><span class="pt-text">La France doit <b>produire plus</b> (EnR + nouveau nucléaire) tout en <b>consommant mieux</b> (sobriété, flexibilité). Ce n'est plus seulement un problème technique : c'est un <b>enjeu stratégique national</b>.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#888;"></span><span class="pt-text">Ouverture : 6 EPR2 (Macron 2022), objectif 100 GW EnR d'ici 2035, renforcement réseau pour accueillir VE et panneaux solaires locaux.</span></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 8 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#F1EFE8;color:#444441;">8</div>
+      <div>
+        <div class="step-title" style="color:#444441;">Phrase de fin</div>
+        <div class="step-time">À dire lentement</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="phrase">"Répartir l'électricité en France, c'est arbitrer en permanence entre disponibilité, décarbonation et coût — un équilibre de plus en plus complexe à l'heure de l'électrification de tout."</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════ IA ══════════ -->
+<div class="page" id="p1">
+
+  <!-- ÉTAPE 1 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#EEEDFE;color:#3C3489;">1</div>
+      <div>
+        <div class="step-title" style="color:#3C3489;">Accroche</div>
+        <div class="step-time">~30 sec</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#534AB7;"></span><span class="pt-text">Entraîner GPT-3, ça a produit <b>552 tonnes de CO₂</b> — soit <b>5 allers-retours New York–San Francisco en avion</b>. <em>(Patterson et al., 2021)</em></span></div>
+      <div class="pt"><span class="pt-dot" style="background:#534AB7;"></span><span class="pt-text">Le numérique représente déjà <b>~4 % des émissions mondiales de gaz à effet de serre</b> — autant que l'aviation civile. <em>(The Shift Project, 2023)</em></span></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 2 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#EEEDFE;color:#3C3489;">2</div>
+      <div>
+        <div class="step-title" style="color:#3C3489;">Définir l'IA</div>
+        <div class="step-time">~20 sec</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#888;"></span><span class="pt-text">Systèmes qui apprennent sur des données pour classer, générer, prédire.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#888;"></span><span class="pt-text">Deux phases : <b>entraînement</b> (coûteux, ponctuel) et <b>inférence</b> (moins intense par requête, mais continu et massif).</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#888;"></span><span class="pt-text">Repose sur une infrastructure physique : terminaux, réseaux, data centers.</span></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 3 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#EEEDFE;color:#3C3489;">3</div>
+      <div>
+        <div class="step-title" style="color:#3C3489;">Annonce du plan</div>
+        <div class="step-time">~20 sec</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#1D9E75;"></span><span class="pt-text"><b>Axe 1</b> — Impact environnemental : CO₂, eau, déchets électroniques.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#378ADD;"></span><span class="pt-text"><b>Axe 2</b> — Impact énergétique : toute la chaîne de consommation.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#EF9F27;"></span><span class="pt-text"><b>Axe 3</b> — Impact économique : marché, emploi, bénéfices et fractures.</span></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 4 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#E1F5EE;color:#085041;">4</div>
+      <div>
+        <div class="step-title" style="color:#085041;">Axe 1 — Impact environnemental</div>
+        <div class="step-time">~2 min 30</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#1D9E75;"></span><span class="pt-text"><b>Empreinte carbone</b> : 552 t CO₂ pour GPT-3. L'empreinte dépend fortement du mix électrique local — un data center en Islande (géothermie) vs Pologne (charbon), c'est ×10 pour le même calcul. GPT-4 : plusieurs milliers de tonnes.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#1D9E75;"></span><span class="pt-text"><b>Eau</b> : 700 000 L pour entraîner GPT-3 (Li et al., 2023). Refroidissement par tours d'eau. Problème de stress hydrique local — certains data centers sont en zones arides.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#1D9E75;"></span><span class="pt-text"><b>E-waste</b> : 62 Mt/an pour tout le numérique (ONU 2022). Les GPU sont renouvelés tous les 2–3 ans, utilisent des matières rares (cobalt, lithium). Seulement ~20 % des e-déchets traités correctement. En EE, on parle d'ACV : la fabrication d'un GPU représente parfois plus d'impact que son usage.</span></div>
+      <div class="warn">⚠ Nuance à toujours glisser : l'IA est aussi une solution — DeepMind a réduit la consommation de refroidissement de Google de <b>40 %</b>. Elle aide la modélisation climatique et l'optimisation des réseaux électriques. C'est le paradoxe central.</div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 5 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#E6F1FB;color:#0C447C;">5</div>
+      <div>
+        <div class="step-title" style="color:#0C447C;">Axe 2 — Impact énergétique</div>
+        <div class="step-time">~2 min 30</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#378ADD;"></span><span class="pt-text"><b>Toute la chaîne consomme</b> : terminal → WiFi/4G/5G → backbone Internet → data center. Les réseaux de télécoms consomment à eux seuls <b>~200 TWh/an</b> (IEA), séparément des data centers.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#378ADD;"></span><span class="pt-text"><b>PUE (Power Usage Effectiveness)</b> = énergie totale du data center ÷ énergie utile au calcul. <b>1,0</b> = idéal impossible / <b>1,1</b> = Google / <b>1,5</b> = moyenne industrie / <b>2,0</b> = vieux centres. Exemple concret : PUE 1,5 → 100 kW de calcul + 50 kW gaspillés (climatisation ~40 % + conversions). En EE, le PUE c'est simplement un <b>rendement</b>.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#378ADD;"></span><span class="pt-text"><b>Entraînement vs inférence</b> : l'entraînement est ponctuel mais intense (semaines sur des milliers de GPU = <b>puissance de crête</b>). L'inférence consomme ×10 une recherche Google par requête, mais des milliards de requêtes par jour → l'impact total de l'inférence dépasse celui de l'entraînement. C'est le <b>régime permanent</b>.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#378ADD;"></span><span class="pt-text">Les data centers consommaient <b>415 TWh en 2024</b> → projection <b>945 TWh d'ici 2030</b> (IEA, rapport "Energy and AI", 2025). Croissance +12 %/an depuis 2017.</span></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 6 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#FAEEDA;color:#633806;">6</div>
+      <div>
+        <div class="step-title" style="color:#633806;">Axe 3 — Impact économique</div>
+        <div class="step-time">~2 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#EF9F27;"></span><span class="pt-text"><b>Marché</b> : ~200 Md$ en 2023, projeté >1 800 Md$ en 2030 (Statista). Nvidia ×8 en bourse entre 2022 et 2024. Nouvelles industries créées : cloud IA, MLOps, prompt engineering, cybersécurité IA.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#EF9F27;"></span><span class="pt-text"><b>Emploi</b> : le FMI estime 40 % des emplois "exposés" en 2024 — mais exposés ≠ perdus. Certains seront augmentés, d'autres transformés. Le vrai risque : une <b>transition inégale</b> selon les pays et les niveaux de qualification.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#EF9F27;"></span><span class="pt-text"><b>Bénéfices</b> : gains de productivité estimés 2 600–4 400 Md$/an (McKinsey, 2023). Mais ces gains sont concentrés chez les géants tech → <b>fracture numérique</b> Nord/Sud.</span></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 7 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#FCEBEB;color:#791F1F;">7</div>
+      <div>
+        <div class="step-title" style="color:#791F1F;">Conclusion</div>
+        <div class="step-time">~1 min</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pt"><span class="pt-dot" style="background:#E24B4A;"></span><span class="pt-text"><b>Environnemental</b> : impact réel (CO₂, eau, e-waste) — mais très dépendant des choix de localisation et du mix énergétique.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#E24B4A;"></span><span class="pt-text"><b>Énergétique</b> : toute la chaîne consomme (réseau inclus). PUE en amélioration, mais demande ×2,3 d'ici 2030 (IEA).</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#E24B4A;"></span><span class="pt-text"><b>Économique</b> : moteur de croissance, mais gains concentrés et risque de fracture numérique.</span></div>
+      <div class="pt"><span class="pt-dot" style="background:#888;"></span><span class="pt-text">L'IA est à la fois <b>cause</b> et <b>solution potentielle</b>. La question n'est pas "faut-il l'IA ?" mais comment la développer durablement. Pistes : IA frugale (Mistral, Phi-3), data centers à énergie verte, AI Act européen 2024, sobriété numérique.</span></div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 8 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num" style="background:#F1EFE8;color:#444441;">8</div>
+      <div>
+        <div class="step-title" style="color:#444441;">Phrase de fin</div>
+        <div class="step-time">À dire lentement</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="phrase">"L'IA restera une opportunité ou deviendra une contrainte selon les choix que nos sociétés feront dans les 10 prochaines années."</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function show(n) {
+    document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', i===n));
+    document.querySelectorAll('.page').forEach((p,i) => p.classList.toggle('active', i===n));
+  }
+</script>
+</body>
+</html>

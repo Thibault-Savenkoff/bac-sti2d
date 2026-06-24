@@ -21,6 +21,11 @@ export function renderGrandOral() {
         <div style="font-size:16px;font-weight:700;color:#534AB7;margin-bottom:4px;">Synthèse rapide</div>
         <div style="font-size:13px;color:#666;line-height:1.4;">Les deux sujets · Chiffres clés · Plans<br>Vue condensée</div>
       </a>
+      <a href="fiches_conducteur.html" class="card card-link" style="text-decoration:none;display:block;padding:20px;border-radius:16px;background:white;box-shadow:0 1px 3px rgba(0,0,0,0.08);border:1px solid #E5E4E0;">
+        <div style="font-size:28px;margin-bottom:10px;">🎤</div>
+        <div style="font-size:16px;font-weight:700;color:#1D9E75;margin-bottom:4px;">Conducteur d'oral</div>
+        <div style="font-size:13px;color:#666;line-height:1.4;">Script de passage · Timing · Transitions<br>Les deux sujets</div>
+      </a>
     </div>
   `;
 }
