@@ -3,43 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grand Oral — Synthèse</title>
+<title>Synthèse Grand Oral</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; background: #F2F1EE; color: #1a1a1a; padding: 12px; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; background: #F2F1EE; color: #1a1a1a; font-size: 13px; }
 
-  .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
-  .tab { flex: 1; padding: 10px; border-radius: 10px; border: 1.5px solid #E5E4E0; background: white; font-size: 13px; font-weight: 600; color: #666; cursor: pointer; text-align: center; }
-  .tab.active { color: white; border-color: transparent; }
-  .tab.t0.active { background: #534AB7; }
-  .tab.t1.active { background: #1D9E75; }
+  .tabs { display: flex; gap: 8px; padding: 12px 12px 0; position: sticky; top: 0; background: #F2F1EE; z-index: 10; padding-bottom: 10px; border-bottom: 1px solid #E5E4E0; }
+  .tab { flex: 1; padding: 9px; border-radius: 10px; border: 1.5px solid #E5E4E0; background: white; font-size: 13px; font-weight: 600; color: #666; cursor: pointer; text-align: center; }
+  .tab.t0.active { background: #1D9E75; color: white; border-color: transparent; }
+  .tab.t1.active { background: #534AB7; color: white; border-color: transparent; }
 
-  .page { display: none; }
+  .page { display: none; padding: 10px 12px 24px; }
   .page.active { display: block; }
 
-  .block { background: white; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-  .block-title { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #999; margin-bottom: 10px; }
+  .block { background: white; border-radius: 12px; padding: 11px 13px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+  .btitle { font-size: 9px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: #aaa; margin-bottom: 8px; }
 
-  /* Plan */
-  .plan-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 0.5px solid #E5E4E0; }
-  .plan-row:last-child { border-bottom: none; }
-  .plan-num { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-  .plan-text { font-size: 14px; font-weight: 600; flex: 1; }
-  .plan-sub { font-size: 11px; color: #888; margin-top: 1px; }
+  /* keyword rows */
+  .krow { display: flex; gap: 8px; padding: 5px 0; border-bottom: 0.5px solid #F0EFE9; align-items: baseline; line-height: 1.4; }
+  .krow:last-child { border-bottom: none; padding-bottom: 0; }
+  .krow:first-of-type { padding-top: 0; }
+  .klabel { font-weight: 700; flex-shrink: 0; color: #333; min-width: 90px; }
+  .kval { color: #444; flex: 1; }
 
-  /* Chiffres */
-  .nums { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-  .num { background: #F7F6F3; border-radius: 9px; padding: 8px 10px; border: 0.5px solid #E5E4E0; }
-  .num-val { font-size: 19px; font-weight: 700; line-height: 1.1; }
-  .num-label { font-size: 10px; color: #888; margin-top: 2px; line-height: 1.3; }
+  /* numbers grid */
+  .ngrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .ncard { background: #F7F6F3; border-radius: 8px; padding: 7px 9px; border: 0.5px solid #E5E4E0; }
+  .nval { font-size: 17px; font-weight: 700; line-height: 1.1; }
+  .nlabel { font-size: 10px; color: #888; margin-top: 2px; line-height: 1.3; }
 
-  /* Concepts */
-  .concept { display: flex; gap: 9px; align-items: flex-start; padding: 7px 0; border-bottom: 0.5px solid #E5E4E0; font-size: 13px; line-height: 1.4; }
-  .concept:last-child { border-bottom: none; }
-  .ckey { font-weight: 700; flex-shrink: 0; }
+  /* phrase */
+  .phrase { font-size: 12px; line-height: 1.6; color: #333; font-style: italic; border-left: 3px solid #E5E4E0; padding-left: 11px; }
 
-  /* Phrase fin */
-  .phrase { font-size: 13px; line-height: 1.6; color: #333; font-style: italic; border-left: 3px solid #E5E4E0; padding-left: 12px; }
+  /* plan */
+  .prow { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; border-bottom: 0.5px solid #F0EFE9; }
+  .prow:last-child { border-bottom: none; }
+  .pnum { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .ptitle { font-weight: 700; font-size: 13px; }
+  .psub { font-size: 11px; color: #888; margin-top: 1px; }
 </style>
 </head>
 <body>
@@ -49,129 +50,189 @@
   <button class="tab t1" onclick="show(1)">🤖 IA</button>
 </div>
 
-<!-- PAGE ÉLECTRICITÉ -->
+<!-- ══════════════ ÉLECTRICITÉ ══════════════ -->
 <div class="page active" id="p0">
 
   <div class="block">
-    <div class="block-title">Plan — 3 axes</div>
-    <div class="plan-row">
-      <div class="plan-num" style="background:#E1F5EE;color:#085041;">1</div>
-      <div><div class="plan-text">Production</div><div class="plan-sub">Mix · Nucléaire · EnR · Atouts / Limites</div></div>
-    </div>
-    <div class="plan-row">
-      <div class="plan-num" style="background:#E6F1FB;color:#0C447C;">2</div>
-      <div><div class="plan-text">Transport & Distribution</div><div class="plan-sub">Niveaux tension · RTE / Enedis · Équilibre 50 Hz</div></div>
-    </div>
-    <div class="plan-row">
-      <div class="plan-num" style="background:#FAEEDA;color:#633806;">3</div>
-      <div><div class="plan-text">Répartition technique</div><div class="plan-sub">Loi des nœuds · Maillé vs radial · Joule</div></div>
-    </div>
+    <div class="btitle">Plan</div>
+    <div class="prow"><div class="pnum" style="background:#E1F5EE;color:#085041;">1</div><div><div class="ptitle">Production</div><div class="psub">Mix · Nucl · EnR · Atouts / Limites</div></div></div>
+    <div class="prow"><div class="pnum" style="background:#E6F1FB;color:#0C447C;">2</div><div><div class="ptitle">Transport & Distribution</div><div class="psub">Tensions · RTE / Enedis · 50 Hz · Pertes</div></div></div>
+    <div class="prow"><div class="pnum" style="background:#FAEEDA;color:#633806;">3</div><div><div class="ptitle">Répartition technique</div><div class="psub">Loi nœuds · Maillé/radial · Joule · Bilan</div></div></div>
   </div>
 
   <div class="block">
-    <div class="block-title">Chiffres à retenir</div>
-    <div class="nums">
-      <div class="num"><div class="num-val" style="color:#085041;">536,5 TWh</div><div class="num-label">Production 2023 (RTE)</div></div>
-      <div class="num"><div class="num-val" style="color:#085041;">~92 %</div><div class="num-label">Bas carbone (nucl. + EnR)</div></div>
-      <div class="num"><div class="num-val" style="color:#085041;">67,4 %</div><div class="num-label">Nucléaire (2023)</div></div>
-      <div class="num"><div class="num-val" style="color:#085041;">+89 TWh</div><div class="num-label">Export net 2024 (record)</div></div>
-      <div class="num"><div class="num-val" style="color:#0C447C;">106 000 km</div><div class="num-label">Lignes RTE (THT/HT)</div></div>
-      <div class="num"><div class="num-val" style="color:#0C447C;">730 000 km</div><div class="num-label">Lignes Enedis (HTA/BT)</div></div>
-      <div class="num"><div class="num-val" style="color:#633806;">~5 %</div><div class="num-label">Pertes réseau totales</div></div>
-      <div class="num"><div class="num-val" style="color:#633806;">~6 000</div><div class="num-label">Nœuds surveillés (RTE)</div></div>
+    <div class="btitle">Chiffres clés</div>
+    <div class="ngrid">
+      <div class="ncard"><div class="nval" style="color:#085041;">536,5 TWh</div><div class="nlabel">Production 2023 (RTE)</div></div>
+      <div class="ncard"><div class="nval" style="color:#085041;">~92 %</div><div class="nlabel">Bas carbone (nucl+EnR)</div></div>
+      <div class="ncard"><div class="nval" style="color:#085041;">67,4 %</div><div class="nlabel">Nucléaire 2023</div></div>
+      <div class="ncard"><div class="nval" style="color:#085041;">27,6 %</div><div class="nlabel">EnR (hydro 13,9 · éolien 10 · solaire 5)</div></div>
+      <div class="ncard"><div class="nval" style="color:#085041;">361,7 TWh</div><div class="nlabel">Nucléaire 2024 (rebond)</div></div>
+      <div class="ncard"><div class="nval" style="color:#085041;">+89 TWh</div><div class="nlabel">Export net 2024 — record · 5 Md€</div></div>
+      <div class="ncard"><div class="nval" style="color:#0C447C;">106 000 km</div><div class="nlabel">Lignes RTE (THT/HT)</div></div>
+      <div class="ncard"><div class="nval" style="color:#0C447C;">730 000 km</div><div class="nlabel">Lignes Enedis (HTA/BT)</div></div>
+      <div class="ncard"><div class="nval" style="color:#0C447C;">~35 M</div><div class="nlabel">Compteurs Linky installés</div></div>
+      <div class="ncard"><div class="nval" style="color:#0C447C;">7 pays</div><div class="nlabel">Interconnexions France (50+ lignes)</div></div>
+      <div class="ncard"><div class="nval" style="color:#633806;">~5 %</div><div class="nlabel">Pertes totales réseau</div></div>
+      <div class="ncard"><div class="nval" style="color:#633806;">~6 000</div><div class="nlabel">Nœuds RTE (dispatching S-Denis)</div></div>
+      <div class="ncard"><div class="nval" style="color:#633806;">~5 GW</div><div class="nlabel">STEP France — rendement ~80 %</div></div>
+      <div class="ncard"><div class="nval" style="color:#633806;">+30–40 %</div><div class="nlabel">Hausse demande prévue d'ici 2050</div></div>
     </div>
   </div>
 
   <div class="block">
-    <div class="block-title">Niveaux de tension (à réciter)</div>
-    <div class="concept"><span class="ckey" style="color:#534AB7;">400/225 kV</span> THT — transport longue distance — RTE</div>
-    <div class="concept"><span class="ckey" style="color:#378ADD;">63/90 kV</span> HT — transport régional — RTE</div>
-    <div class="concept"><span class="ckey" style="color:#EF9F27;">20 kV</span> HTA — distribution — Enedis</div>
-    <div class="concept"><span class="ckey" style="color:#1D9E75;">230/400 V</span> BT — usage domestique — Enedis</div>
+    <div class="btitle">Niveaux de tension</div>
+    <div class="krow"><div class="klabel" style="color:#534AB7;">400 / 225 kV</div><div class="kval">THT — transport longue distance — RTE</div></div>
+    <div class="krow"><div class="klabel" style="color:#378ADD;">63 / 90 kV</div><div class="kval">HT — transport régional — RTE — grandes industries + postes sources</div></div>
+    <div class="krow"><div class="klabel" style="color:#EF9F27;">20 kV</div><div class="kval">HTA — distribution — Enedis — quartiers + PME</div></div>
+    <div class="krow"><div class="klabel" style="color:#1D9E75;">230 / 400 V</div><div class="kval">BT — domestique + petits commerces — Enedis</div></div>
   </div>
 
   <div class="block">
-    <div class="block-title">Concepts EE clés</div>
-    <div class="concept"><span class="ckey">Loi des nœuds</span> ΣI_entrées = ΣI_sorties — conserv. de la charge</div>
-    <div class="concept"><span class="ckey">Pertes Joule</span> P = R·I² → transporter à haute tension réduit I → moins de pertes</div>
-    <div class="concept"><span class="ckey">50 Hz</span> Fréquence réseau = reflet de l'équilibre prod/conso. RTE tient ±0,2 Hz</div>
-    <div class="concept"><span class="ckey">R = ρL/S</span> Résistance de ligne — ρ alu = 2,7×10⁻⁸ Ω·m</div>
-    <div class="concept"><span class="ckey">Maillé vs radial</span> RTE maillé = redondant ; Enedis radial = simple mais fragile</div>
-    <div class="concept"><span class="ckey">STEP</span> Seul stockage massif FR : ~5 GW, rendement ~80 %</div>
+    <div class="btitle">Acteurs</div>
+    <div class="krow"><div class="klabel">RTE</div><div class="kval">Transport HT/THT · équilibre offre/demande temps réel · interconnexions · filiale EDF · pas achat/vente → transit</div></div>
+    <div class="krow"><div class="klabel">Enedis</div><div class="kval">Distribution HTA/BT · ex-ERDF · Linky · filiale EDF · pas achat/vente → transit</div></div>
+    <div class="krow"><div class="klabel">CRE</div><div class="kval">Régulation marché · fixe TURPE (tarif accès réseau)</div></div>
+    <div class="krow"><div class="klabel">ADEME</div><div class="kval">Finance + accompagne transition énergétique</div></div>
   </div>
 
   <div class="block">
-    <div class="block-title">Crise 2022 → mémo</div>
-    <div class="concept"><span class="ckey">3 causes</span> 50 % parc nucl. à l'arrêt (corrosion) + sécheresse + crise gaz</div>
-    <div class="concept"><span class="ckey">2024</span> Rebond : 361,7 TWh nucl. + EPR Flamanville (déc. 2024) → export record</div>
+    <div class="btitle">Production — atouts / limites</div>
+    <div class="krow"><div class="klabel" style="color:#3B6FCA;">Nucléaire</div><div class="kval">Base stable · ~6 gCO₂/kWh · pilotable · EPR Flamanville 21/12/2024<br>⚠ maintenance · besoin eau (canicule)</div></div>
+    <div class="krow"><div class="klabel" style="color:#1D9E75;">Hydraulique</div><div class="kval">Seule EnR pilotable grande échelle · vannes ouv/ferm selon demande<br>⚠ pluviométrie (2022 = sécheresse historique)</div></div>
+    <div class="krow"><div class="klabel" style="color:#6BBDE3;">Éolien/Solaire</div><div class="kval">Forte croissance · records 2023<br>⚠ intermittence — non pilotable — défi équilibre réseau</div></div>
   </div>
 
   <div class="block">
-    <div class="block-title">Phrase de fin</div>
+    <div class="btitle">Crise 2022 → 3 causes distinctes</div>
+    <div class="krow"><div class="klabel">Nucléaire</div><div class="kval">Corrosion sous contrainte circuits refroidissement → ~50 % parc à l'arrêt</div></div>
+    <div class="krow"><div class="klabel">Hydraulique</div><div class="kval">Sécheresse historique → baisse production</div></div>
+    <div class="krow"><div class="klabel">Gaz</div><div class="kval">Crise ukrainienne → prix explosifs</div></div>
+    <div class="krow"><div class="klabel">Résultat</div><div class="kval">Importatrice nette — 1ère fois en 40 ans (Allemagne + Espagne)</div></div>
+    <div class="krow"><div class="klabel">2024</div><div class="kval">361,7 TWh nucl + hydraulique record 74,7 TWh + EPR → export record +89 TWh</div></div>
+  </div>
+
+  <div class="block">
+    <div class="btitle">Équilibre réseau — concepts EE</div>
+    <div class="krow"><div class="klabel">50 Hz</div><div class="kval">CA · fréquence = reflet équilibre prod/conso · prod > conso → monte · déficit → descend · RTE tient ±0,2 Hz · déviation → centrales déconnectent → blackout cascade</div></div>
+    <div class="krow"><div class="klabel">Pertes Joule</div><div class="kval">P = R·I² · transporter à HT → U monte → I baisse (car P = U·I) → pertes chutent au carré · rôle transformateurs élévateurs (centrale) + abaisseurs (conso)</div></div>
+    <div class="krow"><div class="klabel">R = ρ·L/S</div><div class="kval">ρ alu = 2,7×10⁻⁸ Ω·m · léger → lignes aériennes HT</div></div>
+    <div class="krow"><div class="klabel">Loi nœuds</div><div class="kval">ΣI entrées = ΣI sorties · ex: 300A + 200A → 500A redistribués · conservation de la charge</div></div>
+    <div class="krow"><div class="klabel">Bilan national</div><div class="kval">P_produite = P_consommée + P_pertes (~5 % chaleur câbles) · RTE minimise ΣR·I² → optimisation numérique temps réel</div></div>
+  </div>
+
+  <div class="block">
+    <div class="btitle">Réseau maillé vs radial</div>
+    <div class="krow"><div class="klabel">RTE — maillé</div><div class="kval">Plusieurs chemins entre 2 points · courant distribué auto selon R=ρL/S · lignes courtes + grande section = plus de courant</div></div>
+    <div class="krow"><div class="klabel">Enedis — radial</div><div class="kval">Un seul chemin par départ · simple à gérer · fragile : panne = coupure totale du départ</div></div>
+    <div class="krow"><div class="klabel">Diviseur courant</div><div class="kval">I₁/I₂ = R₂/R₁ (loi des mailles) · courant préfère moindre résistance</div></div>
+  </div>
+
+  <div class="block">
+    <div class="btitle">STEP + intermittence EnR</div>
+    <div class="krow"><div class="klabel">STEP</div><div class="kval">Station Transfert Énergie Pompage · excédent → pompe eau bas→haut · pointe → turbine → élec · ~5 GW FR (meilleure Europe) · rendement ~80 % · seul stockage massif opérationnel</div></div>
+    <div class="krow"><div class="klabel">Leviers</div><div class="kval">STEP · interconnexions · effacement (EcoWatt, heures creuses) · gaz backup · à terme: batteries, H₂, smart grids</div></div>
+    <div class="krow"><div class="klabel">VE impact</div><div class="kval">Si tous chargent → >50 GW (= conso soirée actuelle) · solution: smart charging + Linky → décaler heure creuse/pic EnR → VE = actif flexibilité</div></div>
+  </div>
+
+  <div class="block">
+    <div class="btitle">Ouverture</div>
+    <div class="krow"><div class="klabel">Nouveau nucl.</div><div class="kval">6 EPR2 annoncés (Macron 2022)</div></div>
+    <div class="krow"><div class="klabel">EnR</div><div class="kval">Objectif 100 GW d'ici 2035</div></div>
+    <div class="krow"><div class="klabel">Réseau</div><div class="kval">Renforcement distribution pour VE + injection locale panneaux solaires</div></div>
+    <div class="krow"><div class="klabel">Enjeu</div><div class="kval">Souveraineté énergétique + décarbonation + compétitivité industrielle</div></div>
+  </div>
+
+  <div class="block">
+    <div class="btitle">Phrase de fin</div>
     <div class="phrase">"Répartir l'électricité en France, c'est arbitrer en permanence entre disponibilité, décarbonation et coût — un équilibre de plus en plus complexe à l'heure de l'électrification de tout."</div>
   </div>
 
 </div>
 
-<!-- PAGE IA -->
+<!-- ══════════════ IA ══════════════ -->
 <div class="page" id="p1">
 
   <div class="block">
-    <div class="block-title">Plan — 3 axes</div>
-    <div class="plan-row">
-      <div class="plan-num" style="background:#E1F5EE;color:#085041;">1</div>
-      <div><div class="plan-text">Impact environnemental</div><div class="plan-sub">CO₂ · Eau · E-waste</div></div>
-    </div>
-    <div class="plan-row">
-      <div class="plan-num" style="background:#E6F1FB;color:#0C447C;">2</div>
-      <div><div class="plan-text">Impact énergétique</div><div class="plan-sub">Chaîne complète · PUE · Entraîn. vs inférence</div></div>
-    </div>
-    <div class="plan-row">
-      <div class="plan-num" style="background:#FAEEDA;color:#633806;">3</div>
-      <div><div class="plan-text">Impact économique</div><div class="plan-sub">Marché · Emploi · Bénéfices / fracture</div></div>
-    </div>
+    <div class="btitle">Plan</div>
+    <div class="prow"><div class="pnum" style="background:#E1F5EE;color:#085041;">1</div><div><div class="ptitle">Impact environnemental</div><div class="psub">CO₂ · Eau · E-waste · Mix local</div></div></div>
+    <div class="prow"><div class="pnum" style="background:#E6F1FB;color:#0C447C;">2</div><div><div class="ptitle">Impact énergétique</div><div class="psub">Chaîne complète · PUE · Entraîn. vs Inférence</div></div></div>
+    <div class="prow"><div class="pnum" style="background:#FAEEDA;color:#633806;">3</div><div><div class="ptitle">Impact économique</div><div class="psub">Marché · Emploi · Bénéfices · Fracture</div></div></div>
   </div>
 
   <div class="block">
-    <div class="block-title">Chiffres à retenir</div>
-    <div class="nums">
-      <div class="num"><div class="num-val" style="color:#085041;">552 t CO₂</div><div class="num-label">Entraîn. GPT-3 (Patterson 2021)</div></div>
-      <div class="num"><div class="num-val" style="color:#085041;">700 000 L</div><div class="num-label">Eau GPT-3 (Li 2023)</div></div>
-      <div class="num"><div class="num-val" style="color:#085041;">~4 %</div><div class="num-label">GES mondiaux du numérique</div></div>
-      <div class="num"><div class="num-val" style="color:#085041;">62 Mt/an</div><div class="num-label">E-waste TIC (ONU 2022)</div></div>
-      <div class="num"><div class="num-val" style="color:#0C447C;">415 TWh</div><div class="num-label">Data centers 2024 (IEA)</div></div>
-      <div class="num"><div class="num-val" style="color:#0C447C;">945 TWh</div><div class="num-label">Projection 2030 (IEA)</div></div>
-      <div class="num"><div class="num-val" style="color:#633806;">~200 Md$</div><div class="num-label">Marché IA 2023</div></div>
-      <div class="num"><div class="num-val" style="color:#633806;">~40 %</div><div class="num-label">Emplois "exposés" (FMI 2024)</div></div>
+    <div class="btitle">Chiffres clés</div>
+    <div class="ngrid">
+      <div class="ncard"><div class="nval" style="color:#085041;">552 t CO₂</div><div class="nlabel">Entraîn. GPT-3 · Patterson 2021 · = 5 A/R NY–SF avion</div></div>
+      <div class="ncard"><div class="nval" style="color:#085041;">700 000 L</div><div class="nlabel">Eau GPT-3 (Li 2023)</div></div>
+      <div class="ncard"><div class="nval" style="color:#085041;">~4 %</div><div class="nlabel">GES mondiaux — numérique = aviation civile (Shift Project 2023)</div></div>
+      <div class="ncard"><div class="nval" style="color:#085041;">62 Mt/an</div><div class="nlabel">E-waste TIC (ONU 2022) · ~20 % traités correctement</div></div>
+      <div class="ncard"><div class="nval" style="color:#0C447C;">415 TWh</div><div class="nlabel">Data centers 2024 (IEA)</div></div>
+      <div class="ncard"><div class="nval" style="color:#0C447C;">945 TWh</div><div class="nlabel">Projection 2030 (IEA "Energy and AI" 2025) · +12 %/an depuis 2017</div></div>
+      <div class="ncard"><div class="nval" style="color:#0C447C;">~200 TWh</div><div class="nlabel">Télécoms/an (IEA) — séparé des DC</div></div>
+      <div class="ncard"><div class="nval" style="color:#0C447C;">×10</div><div class="nlabel">1 requête IA vs 1 recherche Google (énergie)</div></div>
+      <div class="ncard"><div class="nval" style="color:#633806;">~200 Md$</div><div class="nlabel">Marché IA 2023 → >1 800 Md$ 2030 (Statista)</div></div>
+      <div class="ncard"><div class="nval" style="color:#633806;">+7 %</div><div class="nlabel">Gain PIB potentiel sur 10 ans (Goldman Sachs 2023)</div></div>
+      <div class="ncard"><div class="nval" style="color:#633806;">~40 %</div><div class="nlabel">Emplois "exposés" (FMI 2024) ≠ perdus</div></div>
+      <div class="ncard"><div class="nval" style="color:#633806;">>100 M$</div><div class="nlabel">Coût entraîn. GPT-4 (Sam Altman 2023)</div></div>
+      <div class="ncard"><div class="nval" style="color:#633806;">Nvidia ×8</div><div class="nlabel">En bourse entre 2022 et 2024</div></div>
+      <div class="ncard"><div class="nval" style="color:#633806;">2 600–4 400 Md$</div><div class="nlabel">Gains productivité/an (McKinsey 2023)</div></div>
     </div>
   </div>
 
   <div class="block">
-    <div class="block-title">PUE — Power Usage Effectiveness</div>
-    <div class="concept"><span class="ckey">Formule</span> PUE = énergie totale DC ÷ énergie calcul</div>
-    <div class="concept"><span class="ckey">1,0</span> Idéal impossible · <span class="ckey">1,1</span> Google · <span class="ckey">1,5</span> Moyenne · <span class="ckey">2,0</span> Vieux DC</div>
-    <div class="concept"><span class="ckey">Exemple</span> PUE 1,5 → 100 kW calcul + 50 kW gaspillés (clim + conversions)</div>
+    <div class="btitle">Axe 1 — Environnemental</div>
+    <div class="krow"><div class="klabel">CO₂</div><div class="kval">Dépend mix local · Islande (géothermie) vs Pologne (charbon) → ×10 même calcul · GPT-4 = plusieurs milliers t CO₂</div></div>
+    <div class="krow"><div class="klabel">Eau</div><div class="kval">Refroidissement tours d'eau · stress hydrique local · DC en zones arides (foncier pas cher)</div></div>
+    <div class="krow"><div class="klabel">E-waste</div><div class="kval">GPU renouvelés 2–3 ans · matières rares: cobalt, lithium · ~20 % traités correctement</div></div>
+    <div class="krow"><div class="klabel">ACV</div><div class="kval">Fabrication GPU > impact usage parfois (cycle de vie complet)</div></div>
+    <div class="krow"><div class="klabel">Paradoxe</div><div class="kval">IA cause (CO₂/eau) ET solution (modélisation climat, optimisation réseaux élec)</div></div>
   </div>
 
   <div class="block">
-    <div class="block-title">Concepts clés</div>
-    <div class="concept"><span class="ckey">Entraînement</span> Ponctuel mais intense — semaines, milliers de GPU</div>
-    <div class="concept"><span class="ckey">Inférence</span> ×10 vs Google Search/requête, mais milliards/jour → impact total > entraîn.</div>
-    <div class="concept"><span class="ckey">Chaîne énergie</span> Terminal → WiFi/4G → backbone → data center. Télécoms : ~200 TWh/an (IEA)</div>
-    <div class="concept"><span class="ckey">Paradoxe central</span> IA = cause (CO₂, eau) ET solution (optimis. réseaux, climat)</div>
-    <div class="concept"><span class="ckey">Accroche choc</span> 552 t CO₂ GPT-3 = 5 A/R New York–San Francisco en avion</div>
+    <div class="btitle">Axe 2 — Énergétique</div>
+    <div class="krow"><div class="klabel">Chaîne</div><div class="kval">Terminal → WiFi/4G/5G → backbone Internet → data center · chaque maillon consomme</div></div>
+    <div class="krow"><div class="klabel">PUE</div><div class="kval">= énergie totale DC ÷ énergie calcul · 1,0 idéal (impossible) · 1,1 Google · 1,5 moyenne · 2,0 vieux DC<br>Ex PUE 1,5: 100 kW calcul + 50 kW gaspillés (clim ~40 % + conversions)<br>GPU IA: 2–3× plus chaud que serveurs classiques</div></div>
+    <div class="krow"><div class="klabel">Entraînement</div><div class="kval">Ponctuel · semaines · milliers de GPU · puissance de crête (EE)</div></div>
+    <div class="krow"><div class="klabel">Inférence</div><div class="kval">×10 Google/requête · milliards/jour → impact total > entraînement · régime permanent (EE)</div></div>
+    <div class="krow"><div class="klabel">DeepMind</div><div class="kval">IA optimise refroidissement Google → −40 % conso clim</div></div>
   </div>
 
   <div class="block">
-    <div class="block-title">Solutions à citer</div>
-    <div class="concept"><span class="ckey">IA frugale</span> Mistral, Phi-3 — petits modèles efficaces</div>
-    <div class="concept"><span class="ckey">Énergie verte</span> Microsoft + Three Mile Island (2024)</div>
-    <div class="concept"><span class="ckey">Réglementation</span> AI Act européen 2024</div>
-    <div class="concept"><span class="ckey">Optimisation</span> DeepMind réduit refroidissement Google de 40 %</div>
+    <div class="btitle">Axe 3 — Économique</div>
+    <div class="krow"><div class="klabel">Marché</div><div class="kval">Nvidia ×8 (2022–2024) · nouvelles industries: cloud IA, MLOps, prompt engineering, cybersécurité IA</div></div>
+    <div class="krow"><div class="klabel">Emploi</div><div class="kval">40 % exposés ≠ 40 % perdus · certains augmentés, d'autres transformés · vrai risque: transition inégale (pays + qualification)</div></div>
+    <div class="krow"><div class="klabel">Bénéfices</div><div class="kval">2 600–4 400 Md$/an (McKinsey) · concentration chez géants tech · fracture numérique Nord/Sud</div></div>
+    <div class="krow"><div class="klabel">Paradoxe</div><div class="kval">Coûte cher (énergie, eau) mais valeur économique → investissement massif continue</div></div>
   </div>
 
   <div class="block">
-    <div class="block-title">Phrase de fin</div>
+    <div class="btitle">Lien STI2D EE</div>
+    <div class="krow"><div class="klabel">PUE</div><div class="kval">= rendement (notion EE directe)</div></div>
+    <div class="krow"><div class="klabel">Entraîn.</div><div class="kval">= puissance de crête</div></div>
+    <div class="krow"><div class="klabel">Inférence</div><div class="kval">= régime permanent</div></div>
+    <div class="krow"><div class="klabel">Bilan énerg.</div><div class="kval">énergie produite = énergie utile + pertes</div></div>
+    <div class="krow"><div class="klabel">Empreinte</div><div class="kval">dépend mix électrique local → lien direct question élec</div></div>
+    <div class="krow"><div class="klabel">I2D</div><div class="kval">Architecture systèmes numériques, algorithmes, traitement données</div></div>
+  </div>
+
+  <div class="block">
+    <div class="btitle">Solutions à citer</div>
+    <div class="krow"><div class="klabel">IA frugale</div><div class="kval">Mistral, Phi-3 — petits modèles efficaces pour usages courants</div></div>
+    <div class="krow"><div class="klabel">Énergie verte</div><div class="kval">Microsoft + réacteur Three Mile Island (2024)</div></div>
+    <div class="krow"><div class="klabel">AI Act</div><div class="kval">Européen 2024 · transparence imposée · pas d'équivalent USA/Chine</div></div>
+    <div class="krow"><div class="klabel">Algo</div><div class="kval">Efficacité algorithmique · mutualiser les modèles · sobriété numérique</div></div>
+  </div>
+
+  <div class="block">
+    <div class="btitle">Question ouverte — risque non traité</div>
+    <div class="krow"><div class="klabel">Concentration</div><div class="kval">IA contrôlée par 3–4 entreprises (OpenAI, Google, Meta) + 2 États (USA, Chine)</div></div>
+    <div class="krow"><div class="klabel">Risque</div><div class="kval">Souveraineté numérique · Europe dépendante · géopolitique</div></div>
+    <div class="krow"><div class="klabel">Réponse</div><div class="kval">AI Act EU 2024 — sans équivalent ailleurs</div></div>
+  </div>
+
+  <div class="block">
+    <div class="btitle">Phrase de fin</div>
     <div class="phrase">"L'IA restera une opportunité ou deviendra une contrainte selon les choix que nos sociétés feront dans les 10 prochaines années."</div>
   </div>
 
